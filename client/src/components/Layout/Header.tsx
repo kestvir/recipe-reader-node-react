@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { IState } from "../../shared/type";
+import { IState } from "../../shared/types";
 import { logoutURL } from "../../shared/backendUrls";
 import { logout as logoutAction } from "../../redux/store";
 

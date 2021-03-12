@@ -3,12 +3,12 @@ import passport from "passport";
 const router = express.Router();
 
 router.get(
-  "/auth/google",
+  "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 router.get(
-  "/auth/google/callback",
+  "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/login",
     session: true,
@@ -19,12 +19,12 @@ router.get(
 );
 
 router.get(
-  "/auth/facebook",
+  "/facebook",
   passport.authenticate("facebook", { scope: ["public_profile", "email"] })
 );
 
 router.get(
-  "/auth/facebook/callback",
+  "/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: "/login",
     session: true,
@@ -34,4 +34,4 @@ router.get(
   }
 );
 
-module.exports = router;
+export default router;

@@ -1,5 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-import validator from "validator";
+import mongoose from "mongoose";
 
 const user = new mongoose.Schema({
   googleId: {
@@ -7,10 +6,6 @@ const user = new mongoose.Schema({
     type: String,
   },
   facebookId: {
-    required: false,
-    type: String,
-  },
-  githubId: {
     required: false,
     type: String,
   },

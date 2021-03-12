@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import SocialAuthButtons from "./SocialAuthButtons";
@@ -7,34 +7,69 @@ import Input from "../UI/Input";
 import { signupURL } from "../../shared/backendUrls";
 import { getUser } from "../../shared/functions";
 import { useDispatch, useSelector } from "react-redux";
-import { IState } from "../../shared/type";
+import { IState, ISignupErrors, ISignupErrorData } from "../../shared/types";
 
 interface SignupProps {}
 
-const initialFormState = { email: "", password: "", passwordVerify: "" };
+const initialFormState = { email: "", password: "", confirmPassword: "" };
+const initialErrorState = {
+  emailErrorMessage: "",
+  passwordErrorMessage: "",
+  confirmPasswordErrorMessage: "",
+};
 
 const Signup: React.FC<SignupProps> = ({}) => {
   const user = useSelector((state: IState) => state.auth.userObj);
   const dispatch = useDispatch();
   const [form, setForm] = useState(initialFormState);
+  const [errors, setErrors] = useState<ISignupErrors>(initialErrorState);
+  const [loading, setLoading] = useState(false);
+
   const history = useHistory();
+
+  const setSignupErrors = (error: AxiosError) => {
+    let errorsData = { ...initialErrorState };
+    if (error.response) {
+      error.response.data.data.forEach((errorObj: ISignupErrorData) => {
+        if (errorObj.param === "email") {
+          errorsData.emailErrorMessage = errorObj.msg;
+        } else if (errorObj.param === "password") {
+          errorsData.passwordErrorMessage = errorObj.msg;
+        } else if (errorObj.param === "confirmPassword") {
+          errorsData.confirmPasswordErrorMessage = errorObj.msg;
+        } else return;
+      });
+    }
+    setErrors(errorsData);
+  };
+
+  const removeErrors = () => {
+    setErrors({ ...initialErrorState });
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
+      setLoading(true);
       const res = await axios.post(signupURL, {
         email: form.email,
         password: form.password,
       });
       if (res.data === "success") {
+        setLoading(false);
+        removeErrors();
         getUser(dispatch);
         history.push("/");
       }
     } catch (err) {
+      if (err.response.status === 422) {
+        console.log(err.response);
+        setSignupErrors(err);
+      }
+      setLoading(false);
       console.error(err);
     }
   };
@@ -57,18 +92,35 @@ const Signup: React.FC<SignupProps> = ({}) => {
               name="email"
               type="email"
               label="Email"
+              isError={!!errors.emailErrorMessage}
+              errorMessage={errors.emailErrorMessage}
+              removeError={removeErrors}
               handleChange={handleChange}
             />
             <Input
               name="password"
               type="password"
               label="Password"
+              isError={!!errors.passwordErrorMessage}
+              errorMessage={errors.passwordErrorMessage}
+              removeError={removeErrors}
+              handleChange={handleChange}
+            />
+            <Input
+              name="confirmPassword"
+              type="password"
+              label="Confirm password"
+              isError={!!errors.confirmPasswordErrorMessage}
+              errorMessage={errors.confirmPasswordErrorMessage}
+              removeError={removeErrors}
               handleChange={handleChange}
             />
             <div className="field">
               <div className="control">
                 <button
-                  className="button is-primary has-text-centered is-fullwidth is-size-5"
+                  className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
+                    loading && "is-loading"
+                  }`}
                   type="submit"
                 >
                   <strong>Sign up</strong>

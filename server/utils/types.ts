@@ -1,3 +1,5 @@
+import { ValidationError } from "express-validator/check";
+
 export interface IMongoDBUser {
   googleId?: string;
   facebookId?: string;
@@ -12,4 +14,9 @@ export interface IUserToSend {
   facebookId?: string;
   email: string;
   id: string;
+}
+
+export interface ICustomError extends Error {
+  statusCode?: number;
+  data?: ValidationError[];
 }
