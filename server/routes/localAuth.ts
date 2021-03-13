@@ -113,7 +113,6 @@ router.post(
             password: hashedPassword,
           }
         );
-        await user.save();
         if (!user) {
           const error: ICustomError = new Error(
             "Password reset token in invalid or has been expired."
@@ -121,6 +120,7 @@ router.post(
           error.statusCode = 401;
           throw error;
         } else {
+          await user.save();
           res.send("success");
         }
       } catch (err) {
