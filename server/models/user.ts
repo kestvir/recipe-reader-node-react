@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { IMongoDBUser } from "../utils/types";
 
-const user = new mongoose.Schema({
+const user: Schema = new mongoose.Schema({
   googleId: {
     required: false,
     type: String,
@@ -17,6 +18,14 @@ const user = new mongoose.Schema({
     required: false,
     type: String,
   },
+  resetPasswordToken: {
+    required: false,
+    type: String,
+  },
+  resetPasswordExpires: {
+    required: false,
+    type: Date,
+  },
 });
 
-export default mongoose.model("User", user);
+export default mongoose.model<IMongoDBUser>("User", user);

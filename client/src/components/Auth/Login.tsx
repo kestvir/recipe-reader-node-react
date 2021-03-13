@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
@@ -7,30 +7,26 @@ import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
 import { loginURL } from "../../shared/backendUrls";
 import { getUser } from "../../shared/functions";
-import { IState, ILoginError } from "../../shared/types";
+import { IState } from "../../shared/types";
 
 interface LoginProps {}
 
-const initialFormState = { email: "", password: "", passwordVerify: "" };
-const initialErrorState = { isError: false, errorMessage: "" };
+const initialFormState = { email: "", password: "" };
 
 const Login: React.FC<LoginProps> = ({}) => {
   const user = useSelector((state: IState) => state.auth.userObj);
   const dispatch = useDispatch();
   const [form, setForm] = useState(initialFormState);
-  const [error, setError] = useState<ILoginError>(initialErrorState);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const removeError = () => {
-    setError({ ...initialErrorState });
+    setError("");
   };
 
   const setLoginError = () => {
-    setError({
-      isError: true,
-      errorMessage: "Invalid username or password.",
-    });
+    setError("Invalid username or password.");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -68,7 +64,7 @@ const Login: React.FC<LoginProps> = ({}) => {
     <div className="container">
       <div className="columns mb-0">
         <div className="column is-half is-offset-one-quarter box px-6 py-5">
-          <h3 className="is-size-3 mb-1">
+          <h3 className="is-size-3 mb-1 has-text-centered">
             <strong>Log in</strong>
           </h3>
           <form onSubmit={handleSubmit}>
@@ -78,7 +74,7 @@ const Login: React.FC<LoginProps> = ({}) => {
               name="email"
               type="email"
               label="Email"
-              isError={error.isError}
+              isError={!!error}
               removeError={removeError}
               handleChange={handleChange}
             />
@@ -86,16 +82,14 @@ const Login: React.FC<LoginProps> = ({}) => {
               name="password"
               type="password"
               label="Password"
-              isError={error.isError}
+              isError={!!error}
               removeError={removeError}
               handleChange={handleChange}
             />
-            {error.isError && (
+            {error && (
               <div className="field">
                 <div className="control  has-text-centered">
-                  <span className="is-size-5 has-text-danger">
-                    Invalid username or password.
-                  </span>
+                  <span className="is-size-5 has-text-danger">{error}</span>
                 </div>
               </div>
             )}
@@ -114,6 +108,11 @@ const Login: React.FC<LoginProps> = ({}) => {
             <div className="field">
               <div className="control has-text-centered is-size-5">
                 <Link to="/signup">Don't have an account? Sign up!</Link>
+              </div>
+            </div>
+            <div className="field">
+              <div className="control has-text-centered is-size-5">
+                <Link to="/forgotpassword">Forgot password?</Link>
               </div>
             </div>
           </form>

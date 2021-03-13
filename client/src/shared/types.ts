@@ -13,15 +13,15 @@ export interface IState {
   auth: IAuthState;
 }
 
-export interface ISignupErrorData {
+export interface IValidationErrorData {
   value: string;
   msg: string;
   param: string;
   location: string;
 }
 
-export interface ISignupErrors {
-  emailErrorMessage: string;
+export interface IMultipleFieldsAuthErrors {
+  emailErrorMessage?: string;
   passwordErrorMessage: string;
   confirmPasswordErrorMessage: string;
 }

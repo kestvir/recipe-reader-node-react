@@ -13,8 +13,8 @@ router.get(
     failureRedirect: "/login",
     session: true,
   }),
-  function (req, res) {
-    res.redirect("http://localhost:3000/");
+  (_, res) => {
+    res.redirect(process.env.FRONT_END);
   }
 );
 
@@ -29,8 +29,8 @@ router.get(
     failureRedirect: "/login",
     session: true,
   }),
-  function (req, res) {
-    res.redirect("http://localhost:3000/");
+  (_, res) => {
+    res.redirect(process.env.FRONT_END);
   }
 );
 

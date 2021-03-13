@@ -7,7 +7,11 @@ import Input from "../UI/Input";
 import { signupURL } from "../../shared/backendUrls";
 import { getUser } from "../../shared/functions";
 import { useDispatch, useSelector } from "react-redux";
-import { IState, ISignupErrors, ISignupErrorData } from "../../shared/types";
+import {
+  IState,
+  IMultipleFieldsAuthErrors,
+  IValidationErrorData,
+} from "../../shared/types";
 
 interface SignupProps {}
 
@@ -22,7 +26,9 @@ const Signup: React.FC<SignupProps> = ({}) => {
   const user = useSelector((state: IState) => state.auth.userObj);
   const dispatch = useDispatch();
   const [form, setForm] = useState(initialFormState);
-  const [errors, setErrors] = useState<ISignupErrors>(initialErrorState);
+  const [errors, setErrors] = useState<IMultipleFieldsAuthErrors>(
+    initialErrorState
+  );
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
@@ -30,7 +36,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
   const setSignupErrors = (error: AxiosError) => {
     let errorsData = { ...initialErrorState };
     if (error.response) {
-      error.response.data.data.forEach((errorObj: ISignupErrorData) => {
+      error.response.data.data.forEach((errorObj: IValidationErrorData) => {
         if (errorObj.param === "email") {
           errorsData.emailErrorMessage = errorObj.msg;
         } else if (errorObj.param === "password") {
@@ -57,6 +63,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
       const res = await axios.post(signupURL, {
         email: form.email,
         password: form.password,
+        confirmPassword: form.confirmPassword,
       });
       if (res.data === "success") {
         setLoading(false);
@@ -82,7 +89,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
     <div className="container">
       <div className="columns mb-0">
         <div className="column is-half is-offset-one-quarter box px-6 py-5">
-          <h3 className="is-size-3 mb-1">
+          <h3 className="is-size-3 mb-1 has-text-centered">
             <strong>Sign up</strong>
           </h3>
           <form onSubmit={handleSubmit}>

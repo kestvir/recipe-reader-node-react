@@ -51,7 +51,9 @@ const Input: React.FC<InputProps> = ({
         />
         <span className="icon is-small is-left">{leftIcon}</span>
       </div>
-      {!!errorMessage && <p className="help is-danger">{errorMessage}</p>}
+      {!!errorMessage && (
+        <p className="help is-danger is-size-5">{errorMessage}</p>
+      )}
     </div>
   );
 };

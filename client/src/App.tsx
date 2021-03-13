@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Signup from "./components/Auth/Signup";
 import { getUser } from "./shared/functions";
 import Login from "./components/Auth/Login";
+import ForgotPassword from "./components/Auth/ForgotPassword";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -19,8 +21,10 @@ const App = () => {
         <Layout>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/login" component={Login} />
+            <Route path="/signup" component={Signup} />
+            <Route path="/login" component={Login} />
+            <Route path="/forgotpassword" component={ForgotPassword} />
+            <Route path="/resetpassword/:token" component={ResetPassword} />
           </Switch>
         </Layout>
       </Router>

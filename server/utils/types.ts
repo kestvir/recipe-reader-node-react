@@ -1,10 +1,13 @@
-import { ValidationError } from "express-validator/check";
+import { ValidationError } from "express-validator";
+import { Document } from "mongoose";
 
-export interface IMongoDBUser {
+export interface IMongoDBUser extends Document {
   googleId?: string;
   facebookId?: string;
   email: string;
   password?: string;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
   __v: number;
   _id: string;
 }

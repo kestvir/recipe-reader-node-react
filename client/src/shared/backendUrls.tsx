@@ -15,3 +15,10 @@ export const logoutURL = `${BASE_API_URL}/logout`;
 export const signupURL = `${BASE_API_URL}/signup`;
 
 export const loginURL = `${BASE_API_URL}/login`;
+
+export const forgotPasswordURL = `${BASE_API_URL}/forgotpassword`;
+
+export const changePasswordURL = `${BASE_API_URL}/changepassword`;
+
+export const checkResetPasswordToken = (token: string) =>
+  `${BASE_API_URL}/resetpassword/${token}`;
