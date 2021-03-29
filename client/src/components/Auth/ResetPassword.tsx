@@ -139,56 +139,58 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   }
 
   return (
-    <div className="container">
-      <div className="columns mb-0">
-        <div className="column is-half is-offset-one-quarter box px-6 py-5">
-          <h3 className="is-size-3 mb-1 has-text-centered">
-            <strong>Forgot password</strong>
-          </h3>
-          <form onSubmit={handleSubmit}>
-            {isPasswordReset && (
-              <div className="field">
-                <div className="control">
-                  <div className="notification has-text-centered is-size-5">
-                    <strong>Password successfully reset!</strong>
+    <section className="section">
+      <div className="container">
+        <div className="columns mb-0">
+          <div className="column is-half is-offset-one-quarter box px-6 py-5">
+            <h3 className="is-size-3 mb-1 has-text-centered">
+              <strong>Forgot password</strong>
+            </h3>
+            <form onSubmit={handleSubmit}>
+              {isPasswordReset && (
+                <div className="field">
+                  <div className="control">
+                    <div className="notification has-text-centered is-size-5">
+                      <strong>Password successfully reset!</strong>
+                    </div>
                   </div>
                 </div>
+              )}
+              <Input
+                name="password"
+                type="password"
+                label="New Password"
+                isError={!!errors.passwordErrorMessage}
+                errorMessage={errors.passwordErrorMessage}
+                removeError={removeErrors}
+                handleChange={handleChange}
+              />
+              <Input
+                name="confirmPassword"
+                type="password"
+                label="Confirm New Password"
+                isError={!!errors.confirmPasswordErrorMessage}
+                errorMessage={errors.confirmPasswordErrorMessage}
+                removeError={removeErrors}
+                handleChange={handleChange}
+              />
+              <div className="field">
+                <div className="control">
+                  <button
+                    className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
+                      loading && "is-loading"
+                    }`}
+                    type="submit"
+                  >
+                    <strong>Submit</strong>
+                  </button>
+                </div>
               </div>
-            )}
-            <Input
-              name="password"
-              type="password"
-              label="New Password"
-              isError={!!errors.passwordErrorMessage}
-              errorMessage={errors.passwordErrorMessage}
-              removeError={removeErrors}
-              handleChange={handleChange}
-            />
-            <Input
-              name="confirmPassword"
-              type="password"
-              label="Confirm New Password"
-              isError={!!errors.confirmPasswordErrorMessage}
-              errorMessage={errors.confirmPasswordErrorMessage}
-              removeError={removeErrors}
-              handleChange={handleChange}
-            />
-            <div className="field">
-              <div className="control">
-                <button
-                  className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                    loading && "is-loading"
-                  }`}
-                  type="submit"
-                >
-                  <strong>Submit</strong>
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

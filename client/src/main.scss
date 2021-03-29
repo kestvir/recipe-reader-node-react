@@ -2,4 +2,8 @@
 
 $footer-padding: 2rem 0;
 
+section {
+    height: calc(100vh - 88px - 56px);
+}
+
 @import "../node_modules/bulma/bulma.sass";

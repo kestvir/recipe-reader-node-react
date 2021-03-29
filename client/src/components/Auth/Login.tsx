@@ -61,64 +61,66 @@ const Login: React.FC<LoginProps> = ({}) => {
   }
 
   return (
-    <div className="container">
-      <div className="columns mb-0">
-        <div className="column is-half is-offset-one-quarter box px-6 py-5">
-          <h3 className="is-size-3 mb-1 has-text-centered">
-            <strong>Log in</strong>
-          </h3>
-          <form onSubmit={handleSubmit}>
-            <SocialAuthButtons isSignup={false} />
-            <div className="field has-text-centered is-size-5">OR</div>
-            <Input
-              name="email"
-              type="email"
-              label="Email"
-              isError={!!error}
-              removeError={removeError}
-              handleChange={handleChange}
-            />
-            <Input
-              name="password"
-              type="password"
-              label="Password"
-              isError={!!error}
-              removeError={removeError}
-              handleChange={handleChange}
-            />
-            {error && (
+    <section className="section">
+      <div className="container">
+        <div className="columns mb-0">
+          <div className="column is-half is-offset-one-quarter box px-6 py-5">
+            <h3 className="is-size-3 mb-1 has-text-centered">
+              <strong>Log in</strong>
+            </h3>
+            <form onSubmit={handleSubmit}>
+              <SocialAuthButtons isSignup={false} />
+              <div className="field has-text-centered is-size-5">OR</div>
+              <Input
+                name="email"
+                type="email"
+                label="Email"
+                isError={!!error}
+                removeError={removeError}
+                handleChange={handleChange}
+              />
+              <Input
+                name="password"
+                type="password"
+                label="Password"
+                isError={!!error}
+                removeError={removeError}
+                handleChange={handleChange}
+              />
+              {error && (
+                <div className="field">
+                  <div className="control  has-text-centered">
+                    <span className="is-size-5 has-text-danger">{error}</span>
+                  </div>
+                </div>
+              )}
               <div className="field">
-                <div className="control  has-text-centered">
-                  <span className="is-size-5 has-text-danger">{error}</span>
+                <div className="control">
+                  <button
+                    className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
+                      loading && "is-loading"
+                    }`}
+                    type="submit"
+                  >
+                    <strong>Log in</strong>
+                  </button>
                 </div>
               </div>
-            )}
-            <div className="field">
-              <div className="control">
-                <button
-                  className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                    loading && "is-loading"
-                  }`}
-                  type="submit"
-                >
-                  <strong>Log in</strong>
-                </button>
+              <div className="field">
+                <div className="control has-text-centered is-size-5">
+                  <Link to="/signup">Don't have an account? Sign up!</Link>
+                </div>
               </div>
-            </div>
-            <div className="field">
-              <div className="control has-text-centered is-size-5">
-                <Link to="/signup">Don't have an account? Sign up!</Link>
+              <div className="field">
+                <div className="control has-text-centered is-size-5">
+                  <Link to="/forgotpassword">Forgot password?</Link>
+                </div>
               </div>
-            </div>
-            <div className="field">
-              <div className="control has-text-centered is-size-5">
-                <Link to="/forgotpassword">Forgot password?</Link>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
