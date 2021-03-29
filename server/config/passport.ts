@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import { PassportStatic } from "passport";
-import { IMongoDBUser, IUserToSend } from "../utils/types";
+import { IMongoDBUser, IUserToSend } from "../src/types";
 
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;

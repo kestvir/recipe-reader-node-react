@@ -5,14 +5,13 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import async from "async";
 import nodemailer from "nodemailer";
-import { ICustomError, IMongoDBUser } from "../utils/types";
+import { ICustomError, IMongoDBUser } from "../src/types";
 import { validationResult, Result, ValidationError } from "express-validator";
 import {
   signupValidator,
   forgotPasswordValidator,
   resetPasswordValidator,
 } from "../validators/auth";
-import user from "../models/user";
 
 const router = express.Router();
 

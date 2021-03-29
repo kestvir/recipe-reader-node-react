@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IMongoDBUser } from "../utils/types";
+import { IMongoDBUser } from "../src/types";
 
 const user: Schema = new mongoose.Schema({
   googleId: {

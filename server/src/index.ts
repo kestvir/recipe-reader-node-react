@@ -7,7 +7,7 @@ import passport from "passport";
 import localAuth from "../routes/localAuth";
 import socialAuth from "../routes/socialAuth";
 import passportConfig from "../config/passport";
-import { ICustomError } from "../utils/types";
+import { ICustomError } from "./types";
 
 dotenv.config();
 
