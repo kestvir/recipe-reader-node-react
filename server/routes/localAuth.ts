@@ -5,7 +5,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import async from "async";
 import nodemailer from "nodemailer";
-import { ICustomError, IMongoDBUser } from "../src/types";
+import { CustomError,MongoDBUser } from "../src/types";
 import { validationResult, Result, ValidationError } from "express-validator";
 import {
   signupValidator,
@@ -17,7 +17,7 @@ const router = express.Router();
 
 const checkValidationErrors = (errors: Result<ValidationError>) => {
   if (!errors.isEmpty()) {
-    const error: ICustomError = new Error("Validation failed.");
+    const error: CustomError = new Error("Validation failed.");
     error.statusCode = 422;
     error.data = errors.array();
     throw error;
@@ -74,7 +74,7 @@ router.get("/resetpassword/:token", async (req, res, next) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
     if (!user) {
-      const error: ICustomError = new Error(
+      const error: CustomError = new Error(
         "Password reset token in invalid or has been expired."
       );
       error.statusCode = 401;
@@ -113,7 +113,7 @@ router.post(
           }
         );
         if (!user) {
-          const error: ICustomError = new Error(
+          const error: CustomError = new Error(
             "Password reset token in invalid or has been expired."
           );
           error.statusCode = 401;
@@ -146,11 +146,11 @@ router.post(
         },
         async (token: string, done: any) => {
           try {
-            const user: IMongoDBUser = await User.findOne({
+            const user: MongoDBUser = await User.findOne({
               email: req.body.email,
             });
             if (!user) {
-              const error: ICustomError = new Error(
+              const error: CustomError = new Error(
                 "A user with this email could not be found."
               );
               error.statusCode = 401;
@@ -170,7 +170,7 @@ router.post(
             next(err);
           }
         },
-        (token: string, user: IMongoDBUser) => {
+        (token: string, user: MongoDBUser) => {
           let smtpTransport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
@@ -197,7 +197,7 @@ router.post(
           });
         },
       ],
-      (err: ICustomError) => {
+      (err: CustomError) => {
         if (err)
           if (!err.statusCode) {
             err.statusCode = 500;

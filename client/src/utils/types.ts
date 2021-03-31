@@ -1,26 +1,26 @@
-export interface IUser {
+export interface User {
   id: string;
   email: string;
   facebookId?: string;
   googleId?: string;
 }
 
-export interface IAuthState {
-  userObj: IUser;
+export interface AuthState {
+  userObj: User;
 }
 
-export interface IState {
-  auth: IAuthState;
+export interface State {
+  auth: AuthState;
 }
 
-export interface IValidationErrorData {
+export interface ValidationErrorData {
   value: string;
   msg: string;
   param: string;
   location: string;
 }
 
-export interface IMultipleFieldsAuthErrors {
+export interface MultipleFieldsAuthErrors {
   emailErrorMessage?: string;
   passwordErrorMessage: string;
   confirmPasswordErrorMessage: string;

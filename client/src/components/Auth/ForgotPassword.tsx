@@ -5,12 +5,12 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Input from "../UI/Input";
 import { forgotPasswordURL } from "../../utils/backendUrls";
-import { IState } from "../../utils/types";
+import { State } from "../../utils/types";
 
 interface ForgotPasswordProps {}
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
   const history = useHistory();
 
   const [email, setEmail] = useState("");

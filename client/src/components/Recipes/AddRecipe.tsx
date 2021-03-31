@@ -7,7 +7,7 @@ import { convertBase64 } from "../../utils/functions";
 
 interface AddRecipeProps {}
 
-interface IImgFile {
+interface ImgFile {
   name: string;
   file: string | ArrayBuffer | null;
 }
@@ -32,7 +32,7 @@ const initialIngredientsAndInstructions = {
 const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
-  const [selectedImg, setSelectedImg] = useState<IImgFile>({
+  const [selectedImg, setSelectedImg] = useState<ImgFile>({
     name: "Select image...",
     file: "",
   });

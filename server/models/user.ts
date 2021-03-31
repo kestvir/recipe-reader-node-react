@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IMongoDBUser } from "../src/types";
+import { MongoDBUser } from "../src/types";
 import { recipe as RecipeSchema } from "./recipe";
 
 const user: Schema = new mongoose.Schema({
@@ -33,4 +33,4 @@ const user: Schema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model<IMongoDBUser>("User", user);
+export default mongoose.model<MongoDBUser>("User", user);

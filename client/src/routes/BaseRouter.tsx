@@ -8,12 +8,12 @@ import ForgotPassword from "../components/Auth/ForgotPassword";
 import ResetPassword from "../components/Auth/ResetPassword";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import ProtectedRoute from "./ProtectedRoute";
-import { IState } from "../utils/types";
+import { State } from "../utils/types";
 
 interface routesProps {}
 
 const BaseRouter: React.FC<routesProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
 
   return (
     <Switch>

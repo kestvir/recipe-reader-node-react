@@ -7,14 +7,14 @@ import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
 import { loginURL } from "../../utils/backendUrls";
 import { getUser } from "../../utils/functions";
-import { IState } from "../../utils/types";
+import { State } from "../../utils/types";
 
 interface LoginProps {}
 
 const initialFormState = { email: "", password: "" };
 
 const Login: React.FC<LoginProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
 
   const dispatch = useDispatch();
 

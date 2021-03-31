@@ -3,14 +3,14 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { IState } from "../../utils/types";
+import { State } from "../../utils/types";
 import { logoutURL } from "../../utils/backendUrls";
 import { logout as logoutAction } from "../../redux/store";
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
   const dispatch = useDispatch();
   const history = useHistory();
 

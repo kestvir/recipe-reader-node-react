@@ -1,7 +1,7 @@
 import { ValidationError } from "express-validator";
 import { Document } from "mongoose";
 
-export interface IMongoDBUser extends Document {
+export interface MongoDBUser extends Document {
   googleId?: string;
   facebookId?: string;
   email: string;
@@ -12,24 +12,24 @@ export interface IMongoDBUser extends Document {
   _id: string;
 }
 
-export interface IUserToSend {
+export interface UserToSend {
   googleId?: string;
   facebookId?: string;
   email: string;
   id: string;
 }
 
-export interface ICustomError extends Error {
+export interface CustomError extends Error {
   statusCode?: number;
   data?: ValidationError[];
 }
 
-export type TDishCategory = "entree" | "main" | "desert";
+export type DishCategory = "entree" | "main" | "desert";
 
-export interface IRecipe extends Document {
+export interface Recipe extends Document {
   title: string;
   img: string;
-  category: TDishCategory;
+  category: DishCategory;
   ingredients: string[];
   instructions: string[];
 }

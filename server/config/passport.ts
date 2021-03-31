@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import { PassportStatic } from "passport";
-import { IMongoDBUser, IUserToSend } from "../src/types";
+import { MongoDBUser, UserToSend } from "../src/types";
 
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -14,7 +14,7 @@ export default (passport: PassportStatic) => {
         usernameField: "email",
       },
       (email: string, password: string, done: any) => {
-        User.findOne({ email }, (err: Error, user: IMongoDBUser) => {
+        User.findOne({ email }, (err: Error, user: MongoDBUser) => {
           if (err) throw err;
           if (!user) return done(null, false);
           bcrypt.compare(
@@ -44,7 +44,7 @@ export default (passport: PassportStatic) => {
       function (_: any, __: any, profile: any, cb: any) {
         User.findOne(
           { googleId: profile.id },
-          async (err: Error, doc: IMongoDBUser) => {
+          async (err: Error, doc: MongoDBUser) => {
             if (err) {
               return cb(err, null);
             }
@@ -74,7 +74,7 @@ export default (passport: PassportStatic) => {
       function (_: any, __: any, profile: any, cb: any) {
         User.findOne(
           { facebookId: profile.id },
-          async (err: Error, doc: IMongoDBUser) => {
+          async (err: Error, doc: MongoDBUser) => {
             if (err) {
               return cb(err, null);
             }
@@ -93,13 +93,13 @@ export default (passport: PassportStatic) => {
     )
   );
 
-  passport.serializeUser((user: IMongoDBUser, done: any) => {
+  passport.serializeUser((user: MongoDBUser, done: any) => {
     return done(null, user._id);
   });
 
   passport.deserializeUser((id: string, done: any) => {
-    User.findById(id, (err: Error, doc: IMongoDBUser) => {
-      const userToSendObj: IUserToSend = {
+    User.findById(id, (err: Error, doc: MongoDBUser) => {
+      const userToSendObj: UserToSend = {
         id: doc._id,
         email: doc.email,
       };

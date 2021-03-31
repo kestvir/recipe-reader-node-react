@@ -8,7 +8,7 @@ import localAuth from "../routes/localAuth";
 import socialAuth from "../routes/socialAuth";
 import recipes from "../routes/recipes";
 import passportConfig from "../config/passport";
-import { ICustomError } from "./types";
+import { CustomError } from "./types";
 
 dotenv.config();
 
@@ -51,7 +51,7 @@ app.get("/getuser", (req, res) => {
 app.use("/recipes", recipes);
 
 app.use(
-  (error: ICustomError, req: Request, res: Response, next: NextFunction) => {
+  (error: CustomError, req: Request, res: Response, next: NextFunction) => {
     const status = error.statusCode || 500;
     const message = error.message;
     const data = error.data;

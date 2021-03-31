@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IRecipe } from "../src/types";
+import { Recipe } from "../src/types";
 
 export const recipe: Schema = new mongoose.Schema(
   {
@@ -27,4 +27,4 @@ export const recipe: Schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model<IRecipe>("Recipe", recipe);
+export default mongoose.model<Recipe>("Recipe", recipe);

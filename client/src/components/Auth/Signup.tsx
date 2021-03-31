@@ -8,9 +8,9 @@ import { signupURL } from "../../utils/backendUrls";
 import { getUser } from "../../utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  IState,
-  IMultipleFieldsAuthErrors,
-  IValidationErrorData,
+  State,
+  MultipleFieldsAuthErrors,
+  ValidationErrorData,
 } from "../../utils/types";
 
 interface SignupProps {}
@@ -23,11 +23,11 @@ const initialErrorState = {
 };
 
 const Signup: React.FC<SignupProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
   const dispatch = useDispatch();
 
   const [form, setForm] = useState(initialFormState);
-  const [errors, setErrors] = useState<IMultipleFieldsAuthErrors>(
+  const [errors, setErrors] = useState<MultipleFieldsAuthErrors>(
     initialErrorState
   );
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
   const setSignupErrors = (error: AxiosError) => {
     let errorsData = { ...initialErrorState };
     if (error.response) {
-      error.response.data.data.forEach((errorObj: IValidationErrorData) => {
+      error.response.data.data.forEach((errorObj: ValidationErrorData) => {
         if (errorObj.param === "email") {
           errorsData.emailErrorMessage = errorObj.msg;
         } else if (errorObj.param === "password") {

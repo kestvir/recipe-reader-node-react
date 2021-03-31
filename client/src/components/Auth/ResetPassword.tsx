@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import Input from "../UI/Input";
 import { checkResetPasswordToken } from "../../utils/backendUrls";
 import {
-  IState,
-  IMultipleFieldsAuthErrors,
-  IValidationErrorData,
+  State,
+  MultipleFieldsAuthErrors,
+  ValidationErrorData,
 } from "../../utils/types";
 
 interface ResetPasswordProps {}
@@ -25,12 +25,12 @@ const initialErrorState = {
 };
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
-  const user = useSelector((state: IState) => state.auth.userObj);
+  const user = useSelector((state: State) => state.auth.userObj);
   const params: IParams = useParams();
   const history = useHistory();
 
   const [isTokenValid, setIsTokenValid] = useState(true);
-  const [errors, setErrors] = useState<IMultipleFieldsAuthErrors>(
+  const [errors, setErrors] = useState<MultipleFieldsAuthErrors>(
     initialErrorState
   );
   const [initialLoading, setInitialLoading] = useState(true);
@@ -71,7 +71,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const setResetPasswordErrors = (error: AxiosError) => {
     let errorsData = { ...initialErrorState };
     if (error.response) {
-      error.response.data.data.forEach((errorObj: IValidationErrorData) => {
+      error.response.data.data.forEach((errorObj: ValidationErrorData) => {
         if (errorObj.param === "password") {
           errorsData.passwordErrorMessage = errorObj.msg;
         } else if (errorObj.param === "confirmPassword") {
