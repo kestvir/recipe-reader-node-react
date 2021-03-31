@@ -4,12 +4,12 @@ import { Redirect } from "react-router-dom";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Input from "../UI/Input";
-import { checkResetPasswordToken } from "../../shared/backendUrls";
+import { checkResetPasswordToken } from "../../utils/backendUrls";
 import {
   IState,
   IMultipleFieldsAuthErrors,
   IValidationErrorData,
-} from "../../shared/types";
+} from "../../utils/types";
 
 interface ResetPasswordProps {}
 
@@ -37,6 +37,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [isPasswordReset, setIsPasswordReset] = useState(false);
   const [form, setForm] = useState(initialFormState);
+  const [displayErrors, setDisplayErrors] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -85,6 +86,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
     e.preventDefault();
     try {
       setLoading(true);
+      setDisplayErrors(false);
       const res = await axios.post(checkResetPasswordToken(params.token), {
         password: form.password,
         confirmPassword: form.confirmPassword,
@@ -107,6 +109,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
         setResetPasswordErrors(err);
       }
       setLoading(false);
+      setDisplayErrors(true);
       console.log(err);
     }
   };
@@ -157,22 +160,22 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
                 </div>
               )}
               <Input
+                value={form.password}
                 name="password"
                 type="password"
                 label="New Password"
-                isError={!!errors.passwordErrorMessage}
                 errorMessage={errors.passwordErrorMessage}
-                removeError={removeErrors}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <Input
+                value={form.confirmPassword}
                 name="confirmPassword"
                 type="password"
                 label="Confirm New Password"
-                isError={!!errors.confirmPasswordErrorMessage}
                 errorMessage={errors.confirmPasswordErrorMessage}
-                removeError={removeErrors}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <div className="field">
                 <div className="control">

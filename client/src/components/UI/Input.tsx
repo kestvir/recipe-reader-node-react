@@ -1,27 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 
 interface InputProps {
+  value: string;
   name: string;
   label: string;
   type: string;
-  isError?: boolean;
-  errorMessage?: string;
-  removeError?: () => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errorMessage?: string;
+  displayErrors?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
+  value,
   name,
   label,
   type,
-  isError,
-  errorMessage,
-  removeError,
+  displayErrors,
   handleChange,
+  errorMessage,
 }) => {
+  const [hideErrStyles, setHideErrStyles] = useState(true);
+
+  useEffect(() => {
+    setHideErrStyles(!displayErrors);
+  }, [displayErrors]);
+
+  const changeValAndClearErrStyles = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    handleChange(e);
+    setHideErrStyles(true);
+  };
+
   let leftIcon;
+
   const setLeftIcon = () => {
     switch (name) {
       case "email":
@@ -40,18 +54,20 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className="field">
       <label className="label">{label}</label>
-      <div className="control has-icons-left">
+      <div className={`control ${leftIcon && "has-icons-left"}`}>
         <input
-          className={`input is-medium ${isError && "is-danger"}`}
+          value={value}
+          className={`input is-medium ${
+            !!errorMessage && !hideErrStyles && "is-danger"
+          }`}
           type={type}
           name={name}
-          onChange={handleChange}
-          onFocus={removeError}
+          onChange={changeValAndClearErrStyles}
           required
         />
         <span className="icon is-small is-left">{leftIcon}</span>
       </div>
-      {!!errorMessage && (
+      {!!errorMessage && !hideErrStyles && (
         <p className="help is-danger is-size-5">{errorMessage}</p>
       )}
     </div>

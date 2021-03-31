@@ -5,9 +5,9 @@ import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
-import { loginURL } from "../../shared/backendUrls";
-import { getUser } from "../../shared/functions";
-import { IState } from "../../shared/types";
+import { loginURL } from "../../utils/backendUrls";
+import { getUser } from "../../utils/functions";
+import { IState } from "../../utils/types";
 
 interface LoginProps {}
 
@@ -15,10 +15,14 @@ const initialFormState = { email: "", password: "" };
 
 const Login: React.FC<LoginProps> = ({}) => {
   const user = useSelector((state: IState) => state.auth.userObj);
+
   const dispatch = useDispatch();
+
   const [form, setForm] = useState(initialFormState);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [displayErrors, setDisplayErrors] = useState(false);
+
   const history = useHistory();
 
   const removeError = () => {
@@ -37,6 +41,7 @@ const Login: React.FC<LoginProps> = ({}) => {
 
     try {
       setLoading(true);
+      setDisplayErrors(false);
       const res = await axios.post(loginURL, {
         email: form.email,
         password: form.password,
@@ -52,6 +57,7 @@ const Login: React.FC<LoginProps> = ({}) => {
         setLoginError();
       }
       setLoading(false);
+      setDisplayErrors(true);
       console.error(err);
     }
   };
@@ -72,28 +78,23 @@ const Login: React.FC<LoginProps> = ({}) => {
               <SocialAuthButtons isSignup={false} />
               <div className="field has-text-centered is-size-5">OR</div>
               <Input
+                value={form.email}
                 name="email"
                 type="email"
                 label="Email"
-                isError={!!error}
-                removeError={removeError}
+                errorMessage={error}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <Input
+                value={form.password}
                 name="password"
                 type="password"
                 label="Password"
-                isError={!!error}
-                removeError={removeError}
+                errorMessage={error}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
-              {error && (
-                <div className="field">
-                  <div className="control  has-text-centered">
-                    <span className="is-size-5 has-text-danger">{error}</span>
-                  </div>
-                </div>
-              )}
               <div className="field">
                 <div className="control">
                   <button

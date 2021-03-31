@@ -8,7 +8,7 @@ import ForgotPassword from "../components/Auth/ForgotPassword";
 import ResetPassword from "../components/Auth/ResetPassword";
 import AddRecipe from "../components/Recipes/AddRecipe";
 import ProtectedRoute from "./ProtectedRoute";
-import { IState } from "../shared/types";
+import { IState } from "../utils/types";
 
 interface routesProps {}
 
@@ -23,7 +23,7 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/resetpassword/:token" component={ResetPassword} />
       <ProtectedRoute
-        path="/addrecipe"
+        path="/recipes/add"
         component={AddRecipe}
         isAuth={!!user.id}
       />

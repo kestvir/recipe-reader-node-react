@@ -4,14 +4,14 @@ import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import SocialAuthButtons from "./SocialAuthButtons";
 import Input from "../UI/Input";
-import { signupURL } from "../../shared/backendUrls";
-import { getUser } from "../../shared/functions";
+import { signupURL } from "../../utils/backendUrls";
+import { getUser } from "../../utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 import {
   IState,
   IMultipleFieldsAuthErrors,
   IValidationErrorData,
-} from "../../shared/types";
+} from "../../utils/types";
 
 interface SignupProps {}
 
@@ -25,11 +25,13 @@ const initialErrorState = {
 const Signup: React.FC<SignupProps> = ({}) => {
   const user = useSelector((state: IState) => state.auth.userObj);
   const dispatch = useDispatch();
+
   const [form, setForm] = useState(initialFormState);
   const [errors, setErrors] = useState<IMultipleFieldsAuthErrors>(
     initialErrorState
   );
   const [loading, setLoading] = useState(false);
+  const [displayErrors, setDisplayErrors] = useState(false);
 
   const history = useHistory();
 
@@ -60,6 +62,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
     e.preventDefault();
     try {
       setLoading(true);
+      setDisplayErrors(false);
       const res = await axios.post(signupURL, {
         email: form.email,
         password: form.password,
@@ -77,6 +80,7 @@ const Signup: React.FC<SignupProps> = ({}) => {
         setSignupErrors(err);
       }
       setLoading(false);
+      setDisplayErrors(true);
       console.error(err);
     }
   };
@@ -97,31 +101,31 @@ const Signup: React.FC<SignupProps> = ({}) => {
               <SocialAuthButtons isSignup={true} />
               <div className="field has-text-centered is-size-5">OR</div>
               <Input
+                value={form.email}
                 name="email"
                 type="email"
                 label="Email"
-                isError={!!errors.emailErrorMessage}
                 errorMessage={errors.emailErrorMessage}
-                removeError={removeErrors}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <Input
+                value={form.password}
                 name="password"
                 type="password"
                 label="Password"
-                isError={!!errors.passwordErrorMessage}
                 errorMessage={errors.passwordErrorMessage}
-                removeError={removeErrors}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <Input
+                value={form.confirmPassword}
                 name="confirmPassword"
                 type="password"
                 label="Confirm password"
-                isError={!!errors.confirmPasswordErrorMessage}
                 errorMessage={errors.confirmPasswordErrorMessage}
-                removeError={removeErrors}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
               <div className="field">
                 <div className="control">

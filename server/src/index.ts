@@ -6,6 +6,7 @@ import session from "express-session";
 import passport from "passport";
 import localAuth from "../routes/localAuth";
 import socialAuth from "../routes/socialAuth";
+import recipes from "../routes/recipes";
 import passportConfig from "../config/passport";
 import { ICustomError } from "./types";
 
@@ -46,6 +47,8 @@ app.use("/auth", socialAuth);
 app.get("/getuser", (req, res) => {
   res.send(req.user);
 });
+
+app.use("/recipes", recipes);
 
 app.use(
   (error: ICustomError, req: Request, res: Response, next: NextFunction) => {

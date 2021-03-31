@@ -23,8 +23,20 @@ export const getUser = async (dispatch: AppDispatch) => {
       dispatch(setUser({ userObj: initialAuthState }));
       localStorage.removeItem("recipeReaderUser");
     }
-    console.log(res.data);
   } catch (err) {
     console.error(err);
   }
+};
+
+export const convertBase64 = (file: any) => {
+  return new Promise<string | ArrayBuffer | null>((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
 };

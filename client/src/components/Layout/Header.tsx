@@ -3,8 +3,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { IState } from "../../shared/types";
-import { logoutURL } from "../../shared/backendUrls";
+import { IState } from "../../utils/types";
+import { logoutURL } from "../../utils/backendUrls";
 import { logout as logoutAction } from "../../redux/store";
 
 interface HeaderProps {}
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
 
               <div className="navbar-dropdown">
                 <a className="navbar-item">Manage recipes</a>
-                <Link to="/addrecipe" className="navbar-item">
+                <Link to="/recipes/add" className="navbar-item">
                   Add a recipe
                 </Link>
               </div>

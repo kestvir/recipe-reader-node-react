@@ -1,5 +1,5 @@
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from "../shared/types";
+import { IUser } from "../utils/types";
 
 export const initialAuthState: IUser = {
   id: "",

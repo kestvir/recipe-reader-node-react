@@ -1,5 +1,5 @@
 import React from "react";
-import { googleAuth, facebookAuth } from "../../shared/functions";
+import { googleAuth, facebookAuth } from "../../utils/functions";
 import GoogleIcon from "../../assets/icons/GoogleIcon";
 import FacebookIcon from "../../assets/icons/FacebookIcon";
 

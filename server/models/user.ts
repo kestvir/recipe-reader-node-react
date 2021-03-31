@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IMongoDBUser } from "../src/types";
+import { recipe as RecipeSchema } from "./recipe";
 
 const user: Schema = new mongoose.Schema({
   googleId: {
@@ -25,6 +26,10 @@ const user: Schema = new mongoose.Schema({
   resetPasswordExpires: {
     required: false,
     type: Date,
+  },
+  recipes: {
+    required: false,
+    type: [RecipeSchema],
   },
 });
 

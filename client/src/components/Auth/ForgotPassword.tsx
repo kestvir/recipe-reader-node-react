@@ -4,8 +4,8 @@ import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Input from "../UI/Input";
-import { forgotPasswordURL } from "../../shared/backendUrls";
-import { IState } from "../../shared/types";
+import { forgotPasswordURL } from "../../utils/backendUrls";
+import { IState } from "../../utils/types";
 
 interface ForgotPasswordProps {}
 
@@ -17,6 +17,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [displayErrors, setDisplayErrors] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -27,6 +28,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
 
     try {
       setLoading(true);
+      setDisplayErrors(false);
       const res = await axios.post(forgotPasswordURL, {
         email,
       });
@@ -43,6 +45,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
         setError(err.response.data.message);
       }
       setLoading(false);
+      setDisplayErrors(true);
       console.error(err);
     }
   };
@@ -74,20 +77,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
                 </div>
               )}
               <Input
+                value={email}
                 name="email"
                 type="email"
                 label="Email"
-                isError={!!error}
-                removeError={removeError}
+                errorMessage={error}
                 handleChange={handleChange}
+                displayErrors={displayErrors}
               />
-              {error && (
-                <div className="field">
-                  <div className="control  has-text-centered">
-                    <span className="is-size-5 has-text-danger">{error}</span>
-                  </div>
-                </div>
-              )}
               <div className="field">
                 <div className="control">
                   <button

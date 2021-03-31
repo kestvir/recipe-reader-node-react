@@ -23,3 +23,13 @@ export interface ICustomError extends Error {
   statusCode?: number;
   data?: ValidationError[];
 }
+
+export type TDishCategory = "entree" | "main" | "desert";
+
+export interface IRecipe extends Document {
+  title: string;
+  img: string;
+  category: TDishCategory;
+  ingredients: string[];
+  instructions: string[];
+}
