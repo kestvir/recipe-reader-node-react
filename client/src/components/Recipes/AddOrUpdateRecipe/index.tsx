@@ -118,10 +118,10 @@ const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
       }
     } catch (err) {
       setLoading(false);
+      if (err.response.status === 401) return history.push("/login");
       setDisplayErrors(true);
       storeErrors(err.response.data.data);
       console.error(err.response);
-      if (err.response.status === 401) history.push("/login");
     }
   };
 
@@ -132,8 +132,6 @@ const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
     ingredientsErrorMessage,
     instructionsErrorMessage,
   } = errors;
-
-  console.log(ingredientsErrorMessage);
 
   return (
     <section className="section" id="addRecipeSection">

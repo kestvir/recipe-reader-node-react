@@ -8,6 +8,7 @@ export interface MongoDBUser extends Document {
   password?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: number;
+  recipes: Recipe[];
   __v: number;
   _id: string;
 }
