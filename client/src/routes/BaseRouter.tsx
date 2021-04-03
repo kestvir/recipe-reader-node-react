@@ -6,9 +6,9 @@ import Signup from "../components/Auth/Signup";
 import Login from "../components/Auth/Login";
 import ForgotPassword from "../components/Auth/ForgotPassword";
 import ResetPassword from "../components/Auth/ResetPassword";
-import AddRecipe from "../components/Recipes/AddRecipe";
+import AddRecipe from "../components/Recipes/AddOrUpdateRecipe";
 import ProtectedRoute from "./ProtectedRoute";
-import { State } from "../utils/types";
+import { State } from "../utils/@types/types";
 
 interface routesProps {}
 

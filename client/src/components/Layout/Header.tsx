@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { State } from "../../utils/types";
+import { State } from "../../utils/@types/types";
 import { logoutURL } from "../../utils/backendUrls";
 import { logout as logoutAction } from "../../redux/store";
 
@@ -59,16 +59,17 @@ const Header: React.FC<HeaderProps> = ({}) => {
 
             <a className="navbar-item">Documentation</a>
 
-            <div className="navbar-item has-dropdown is-hoverable">
-              <a className="navbar-link">Recipes</a>
-
-              <div className="navbar-dropdown">
-                <a className="navbar-item">Manage recipes</a>
-                <Link to="/recipes/add" className="navbar-item">
-                  Add a recipe
-                </Link>
+            {user.id && (
+              <div className="navbar-item has-dropdown is-hoverable">
+                <a className="navbar-link">Recipes</a>
+                <div className="navbar-dropdown">
+                  <a className="navbar-item">Manage recipes</a>
+                  <Link to="/recipes/add" className="navbar-item">
+                    Add a recipe
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="navbar-end">

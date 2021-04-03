@@ -1,6 +1,7 @@
 const BASE_API_URL = "http://localhost:5000";
 
 const socialAuthURL = "/auth";
+const recipesURL = "/recipes";
 
 export const socialAuthEndpoint = `${BASE_API_URL}${socialAuthURL}`;
 
@@ -20,5 +21,7 @@ export const forgotPasswordURL = `${BASE_API_URL}/forgotpassword`;
 
 export const changePasswordURL = `${BASE_API_URL}/changepassword`;
 
-export const checkResetPasswordToken = (token: string) =>
+export const checkResetPasswordTokenUrl = (token: string) =>
   `${BASE_API_URL}/resetpassword/${token}`;
+
+export const addRecipeURL = `${BASE_API_URL}${recipesURL}/add`;

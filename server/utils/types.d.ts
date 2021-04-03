@@ -12,7 +12,7 @@ export interface MongoDBUser extends Document {
   _id: string;
 }
 
-export interface UserToSend {
+export interface User {
   googleId?: string;
   facebookId?: string;
   email: string;
@@ -30,6 +30,6 @@ export interface Recipe extends Document {
   title: string;
   img: string;
   category: DishCategory;
-  ingredients: string[];
-  instructions: string[];
+  ingredients: string;
+  instructions: string;
 }

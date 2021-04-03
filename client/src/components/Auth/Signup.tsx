@@ -11,7 +11,7 @@ import {
   State,
   MultipleFieldsAuthErrors,
   ValidationErrorData,
-} from "../../utils/types";
+} from "../../utils/@types/types";
 
 interface SignupProps {}
 
@@ -63,11 +63,13 @@ const Signup: React.FC<SignupProps> = ({}) => {
     try {
       setLoading(true);
       setDisplayErrors(false);
-      const res = await axios.post(signupURL, {
-        email: form.email,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      });
+      const { email, password, confirmPassword } = form;
+      const signupObj = {
+        email,
+        password,
+        confirmPassword,
+      };
+      const res = await axios.post(signupURL, signupObj);
       if (res.data === "success") {
         setLoading(false);
         removeErrors();

@@ -1,34 +1,27 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import User from "../models/user";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import async from "async";
 import nodemailer from "nodemailer";
-import { CustomError,MongoDBUser } from "../src/types";
-import { validationResult, Result, ValidationError } from "express-validator";
+import { CustomError, MongoDBUser } from "../utils/types";
+import { validationResult } from "express-validator";
 import {
   signupValidator,
   forgotPasswordValidator,
   resetPasswordValidator,
 } from "../validators/auth";
+import { checkValidationErrors } from "../utils/functions";
 
 const router = express.Router();
-
-const checkValidationErrors = (errors: Result<ValidationError>) => {
-  if (!errors.isEmpty()) {
-    const error: CustomError = new Error("Validation failed.");
-    error.statusCode = 422;
-    error.data = errors.array();
-    throw error;
-  }
-};
 
 router.post(
   "/signup",
   signupValidator,
   (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req?.body;
+
     const errors = validationResult(req);
 
     checkValidationErrors(errors);
@@ -148,6 +141,8 @@ router.post(
           try {
             const user: MongoDBUser = await User.findOne({
               email: req.body.email,
+              googleId: { $exists: false },
+              facebookId: { $exists: false },
             });
             if (!user) {
               const error: CustomError = new Error(
@@ -155,8 +150,6 @@ router.post(
               );
               error.statusCode = 401;
               throw error;
-            } else if (!!user.googleId || !!user.facebookId) {
-              return res.redirect(process.env.FRONT_END);
             }
             user.resetPasswordToken = token;
             user.resetPasswordExpires = Date.now() + 1800000; //   1/2 hours

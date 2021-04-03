@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { MongoDBUser } from "../src/types";
+import { MongoDBUser } from "../utils/types";
 import { recipe as RecipeSchema } from "./recipe";
 
 const user: Schema = new mongoose.Schema({

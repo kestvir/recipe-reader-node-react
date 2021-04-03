@@ -45,6 +45,6 @@ export const resetPasswordValidator = [
       if (value !== req.body.password) {
         throw new Error("Passwords have to match!");
       }
-      return true;
+      return value;
     }),
 ];

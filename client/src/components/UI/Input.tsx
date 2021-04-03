@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import ErrorMessage from "./ErrorMessage";
 
 interface InputProps {
   value: string;
@@ -8,7 +9,7 @@ interface InputProps {
   label: string;
   type: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  errorMessage?: string;
+  errorMessage: string;
   displayErrors?: boolean;
 }
 
@@ -21,17 +22,17 @@ const Input: React.FC<InputProps> = ({
   handleChange,
   errorMessage,
 }) => {
-  const [hideErrStyles, setHideErrStyles] = useState(true);
+  const [hideErrorStyles, setHideErrorStyles] = useState(true);
 
   useEffect(() => {
-    setHideErrStyles(!displayErrors);
+    setHideErrorStyles(!displayErrors);
   }, [displayErrors]);
 
   const changeValAndClearErrStyles = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     handleChange(e);
-    setHideErrStyles(true);
+    setHideErrorStyles(true);
   };
 
   let leftIcon;
@@ -58,18 +59,16 @@ const Input: React.FC<InputProps> = ({
         <input
           value={value}
           className={`input is-medium ${
-            !!errorMessage && !hideErrStyles && "is-danger"
+            !!errorMessage && !hideErrorStyles ? "is-danger" : ""
           }`}
           type={type}
           name={name}
           onChange={changeValAndClearErrStyles}
           required
         />
-        <span className="icon is-small is-left">{leftIcon}</span>
+        {leftIcon && <span className="icon is-small is-left">{leftIcon}</span>}
       </div>
-      {!!errorMessage && !hideErrStyles && (
-        <p className="help is-danger is-size-5">{errorMessage}</p>
-      )}
+      <ErrorMessage message={errorMessage} hideErrorMessage={hideErrorStyles} />
     </div>
   );
 };

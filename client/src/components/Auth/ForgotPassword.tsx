@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Input from "../UI/Input";
 import { forgotPasswordURL } from "../../utils/backendUrls";
-import { State } from "../../utils/types";
+import { State } from "../../utils/@types/types";
 
 interface ForgotPasswordProps {}
 

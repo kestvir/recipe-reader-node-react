@@ -7,7 +7,7 @@ import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
 import { loginURL } from "../../utils/backendUrls";
 import { getUser } from "../../utils/functions";
-import { State } from "../../utils/types";
+import { State } from "../../utils/@types/types";
 
 interface LoginProps {}
 
@@ -29,7 +29,7 @@ const Login: React.FC<LoginProps> = ({}) => {
     setError("");
   };
 
-  const setLoginError = () => {
+  const storeLoginErrors = () => {
     setError("Invalid username or password.");
   };
 
@@ -54,7 +54,7 @@ const Login: React.FC<LoginProps> = ({}) => {
       }
     } catch (err) {
       if (err.response.status === 401) {
-        setLoginError();
+        storeLoginErrors();
       }
       setLoading(false);
       setDisplayErrors(true);

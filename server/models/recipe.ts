@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
-import { Recipe } from "../src/types";
+import { Recipe } from "../utils/types";
 
 export const recipe: Schema = new mongoose.Schema(
   {
     title: {
       required: true,
+      unique: true,
       type: String,
     },
     img: {
@@ -17,11 +18,11 @@ export const recipe: Schema = new mongoose.Schema(
     },
     ingredients: {
       required: true,
-      type: [String],
+      type: String,
     },
     instructions: {
       required: true,
-      type: [String],
+      type: String,
     },
   },
   { timestamps: true }

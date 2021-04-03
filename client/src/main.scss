@@ -1,9 +1,57 @@
 @charset "utf-8";
 
+// COLORS
+$light: #f5f5f5;
+$primary: #ea4aaa;
+$primary-invert: #fff;
+$primary-light: #fdedf6;
+$primary-dark: #c0167c;
+$danger: #ff3860;
+
 $footer-padding: 2rem 0;
 
+body {
+    background: $light;
+}
+
 section {
-    height: calc(100vh - 88px - 56px);
+    min-height: calc(100vh - 88px - 56px);
+    display: flex !important;
+    align-items: center;
+}
+
+#addRecipeSection {
+    height: unset;
+}
+
+.editor {
+    border: 1px solid !important;
+    border-color: #dbdbdb !important;
+    padding: 5px !important;
+    width: 100%;
+    max-height: 275px !important;
+    overflow: auto;
+}
+
+.editor.is-danger,
+.editor-toolbar.is-danger {
+    border-color: $danger !important;
+}
+
+.editor-wrapper {
+    width: 100% !important;
+    height: 360px !important;
+    display: block;
+    box-sizing: inherit !important;
+}
+
+.editor-toolbar {
+    border: 1px solid !important;
+    border-color: #dbdbdb !important;
+}
+
+.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
+    display: none;
 }
 
 @import "../node_modules/bulma/bulma.sass";

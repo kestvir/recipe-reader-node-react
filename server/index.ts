@@ -4,11 +4,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-import localAuth from "../routes/localAuth";
-import socialAuth from "../routes/socialAuth";
-import recipes from "../routes/recipes";
-import passportConfig from "../config/passport";
-import { CustomError } from "./types";
+import localAuth from "./routes/localAuth";
+import socialAuth from "./routes/socialAuth";
+import recipes from "./routes/recipes";
+import passportConfig from "./config/passport";
+import { CustomError } from "./utils/types";
+import { ensureAuth } from "./middleware/auth";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const app = express();
 
 passportConfig(passport);
 
-app.use(express.json());
+app.use(express.json({ limit: "30mb" }));
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -48,6 +49,7 @@ app.get("/getuser", (req, res) => {
   res.send(req.user);
 });
 
+app.use(ensureAuth);
 app.use("/recipes", recipes);
 
 app.use(

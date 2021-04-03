@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import { PassportStatic } from "passport";
-import { MongoDBUser, UserToSend } from "../src/types";
+import { MongoDBUser, User as IUser } from "../utils/types";
 
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -99,7 +99,7 @@ export default (passport: PassportStatic) => {
 
   passport.deserializeUser((id: string, done: any) => {
     User.findById(id, (err: Error, doc: MongoDBUser) => {
-      const userToSendObj: UserToSend = {
+      const userToSendObj: IUser = {
         id: doc._id,
         email: doc.email,
       };

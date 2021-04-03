@@ -1,11 +1,21 @@
 import React from "react";
-import { googleAuth, facebookAuth } from "../../utils/functions";
 import GoogleIcon from "../../assets/icons/GoogleIcon";
 import FacebookIcon from "../../assets/icons/FacebookIcon";
+import {
+  socialAuthGoogleURL,
+  socialAuthFacebookURL,
+} from "../../utils/backendUrls";
 
 interface SocialAuthButtonsProps {
   isSignup: boolean;
 }
+
+const googleAuth = () => {
+  window.open(socialAuthGoogleURL, "_self");
+};
+const facebookAuth = () => {
+  window.open(socialAuthFacebookURL, "_self");
+};
 
 const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ isSignup }) => {
   return (

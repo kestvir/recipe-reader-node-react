@@ -4,16 +4,16 @@ import { Redirect } from "react-router-dom";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Input from "../UI/Input";
-import { checkResetPasswordToken } from "../../utils/backendUrls";
+import { checkResetPasswordTokenUrl } from "../../utils/backendUrls";
 import {
   State,
-  MultipleFieldsAuthErrors,
+  ResetPasswordErrors,
   ValidationErrorData,
-} from "../../utils/types";
+} from "../../utils/@types/types";
 
 interface ResetPasswordProps {}
 
-interface IParams {
+interface Params {
   token: string;
 }
 
@@ -26,13 +26,11 @@ const initialErrorState = {
 
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const user = useSelector((state: State) => state.auth.userObj);
-  const params: IParams = useParams();
+  const params: Params = useParams();
   const history = useHistory();
 
   const [isTokenValid, setIsTokenValid] = useState(true);
-  const [errors, setErrors] = useState<MultipleFieldsAuthErrors>(
-    initialErrorState
-  );
+  const [errors, setErrors] = useState<ResetPasswordErrors>(initialErrorState);
   const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isPasswordReset, setIsPasswordReset] = useState(false);
@@ -42,7 +40,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(checkResetPasswordToken(params.token));
+        const res = await axios.get(checkResetPasswordTokenUrl(params.token));
         if (res.data === "success") {
           setInitialLoading(false);
           setIsTokenValid(true);
@@ -87,7 +85,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
     try {
       setLoading(true);
       setDisplayErrors(false);
-      const res = await axios.post(checkResetPasswordToken(params.token), {
+      const res = await axios.post(checkResetPasswordTokenUrl(params.token), {
         password: form.password,
         confirmPassword: form.confirmPassword,
       });
