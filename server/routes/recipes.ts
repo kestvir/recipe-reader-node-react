@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
 import User from "../models/user";
-import Recipe, { recipe } from "../models/recipe";
 import { validationResult } from "express-validator";
 import * as recipeValidators from "../validators/recipes";
 import { checkValidationErrors } from "../utils/functions";

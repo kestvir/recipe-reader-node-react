@@ -1,3 +1,5 @@
+import { SerializedError } from "@reduxjs/toolkit";
+
 export interface User {
   id: string;
   email: string;
@@ -45,6 +47,18 @@ export interface Recipe {
   img: Blob | string;
   ingredients: string;
   instructions: string;
+}
+
+export interface RecipesError {
+  status: number | null;
+  statusText: string | null;
+}
+
+export interface RecipesState {
+  recipes: Recipe[];
+  activeRecipe: Recipe;
+  status: string;
+  error: RecipesError | SerializedError;
 }
 
 export interface ImgFile {

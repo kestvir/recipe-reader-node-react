@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { State } from "../../utils/@types/types";
 import { logoutURL } from "../../utils/backendUrls";
-import { logout as logoutAction } from "../../redux/store";
+import { logout as logoutAction } from "../../redux/authSlice";
 
 interface HeaderProps {}
 

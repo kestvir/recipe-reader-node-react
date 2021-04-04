@@ -1,6 +1,7 @@
 import { getUserURL } from "./backendUrls";
 import axios from "axios";
-import { initialAuthState, setUser, AppDispatch } from "../redux/store";
+import { AppDispatch } from "../redux/store";
+import { initialAuthState, setUser } from "../redux/authSlice";
 
 export const getUser = async (dispatch: AppDispatch) => {
   try {

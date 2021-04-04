@@ -25,10 +25,6 @@ const Login: React.FC<LoginProps> = ({}) => {
 
   const history = useHistory();
 
-  const removeError = () => {
-    setError("");
-  };
-
   const storeLoginErrors = () => {
     setError("Invalid username or password.");
   };
@@ -48,7 +44,7 @@ const Login: React.FC<LoginProps> = ({}) => {
       });
       if (res.data === "success") {
         setLoading(false);
-        removeError();
+        setError("");
         getUser(dispatch);
         history.push("/");
       }

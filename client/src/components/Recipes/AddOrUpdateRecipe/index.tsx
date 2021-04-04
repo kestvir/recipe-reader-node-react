@@ -14,7 +14,7 @@ import SelectImg from "./SelectImg";
 import IngredientOrInstructionTextField from "./IngredientOrInstructionTextField";
 import SelectCategory from "./SelectCategory";
 
-interface AddRecipeProps {}
+interface AddOrUpdateRecipeProps {}
 
 const initialAddOrUpdateRecipeErrors = {
   titleErrorMessage: "",
@@ -24,7 +24,7 @@ const initialAddOrUpdateRecipeErrors = {
   instructionsErrorMessage: "",
 };
 
-const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
+const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [selectedImg, setSelectedImg] = useState<ImgFile>({
@@ -112,7 +112,6 @@ const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
       setLoading(true);
       setDisplayErrors(false);
       const res = await axios.post(addRecipeURL, recipeObj);
-      console.log(recipeObj);
       if (res.data === "success") {
         setLoading(false);
       }
@@ -198,4 +197,4 @@ const AddRecipe: React.FC<AddRecipeProps> = ({}) => {
   );
 };
 
-export default AddRecipe;
+export default AddOrUpdateRecipe;

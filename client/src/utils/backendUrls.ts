@@ -24,4 +24,6 @@ export const changePasswordURL = `${BASE_API_URL}/changepassword`;
 export const checkResetPasswordTokenUrl = (token: string) =>
   `${BASE_API_URL}/resetpassword/${token}`;
 
+export const getAllRecipesURL = `${BASE_API_URL}${recipesURL}/all`;
+
 export const addRecipeURL = `${BASE_API_URL}${recipesURL}/add`;

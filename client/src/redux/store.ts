@@ -1,38 +1,8 @@
-import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../utils/@types/types";
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authSlice";
+import recipesReducer from "./recipesSlice";
 
-export const initialAuthState: User = {
-  id: "",
-  email: "",
-  facebookId: "",
-  googleId: "",
-};
-
-const loadCurrentUser = () => {
-  const userStr = localStorage.getItem("recipeReaderUser");
-  if (typeof userStr === "string") {
-    return JSON.parse(userStr);
-  } else return initialAuthState;
-};
-
-const authSlice = createSlice({
-  name: "auth",
-  initialState: { userObj: loadCurrentUser() },
-  reducers: {
-    setUser: (state, { payload }: PayloadAction<{ userObj: any }>) => {
-      state.userObj = payload.userObj;
-      localStorage.setItem("recipeReaderUser", JSON.stringify(payload.userObj));
-    },
-    logout: (state) => {
-      state.userObj = initialAuthState;
-      localStorage.removeItem("recipeReader");
-    },
-  },
-});
-
-export const { setUser, logout } = authSlice.actions;
-
-const reducer = { auth: authSlice.reducer };
+const reducer = { auth: authReducer, recipes: recipesReducer };
 
 const store = configureStore({ reducer });
 
