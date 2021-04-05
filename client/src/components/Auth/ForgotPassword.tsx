@@ -1,23 +1,34 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Input from "../UI/Input";
-import { forgotPasswordURL } from "../../utils/backendUrls";
 import { State } from "../../utils/@types/types";
+import { forgotPassword } from "../../redux/slices/forgotPasswordSlice";
 
 interface ForgotPasswordProps {}
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
+  const userId = useSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useSelector(
+    (state: State) => state.forgotPassword
+  );
+
+  console.log(isLoading);
+
+  const dispatch = useDispatch();
+
   const history = useHistory();
 
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
-  const [displayErrors, setDisplayErrors] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => {
+        history.push("/");
+      }, 1500);
+    }
+  }, [isSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -25,37 +36,16 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setLoading(true);
-      setDisplayErrors(false);
-      const res = await axios.post(forgotPasswordURL, {
-        email,
-      });
-      if (res.data === "Email sent successfully!") {
-        setLoading(false);
-        removeError();
-        setIsEmailSent(true);
-        setTimeout(() => {
-          history.push("/");
-        }, 1500);
-      }
-    } catch (err) {
-      if (err.response.status === 401) {
-        setError(err.response.data.message);
-      }
-      setLoading(false);
-      setDisplayErrors(true);
-      console.error(err);
-    }
+    dispatch(forgotPassword(email));
   };
 
-  const removeError = () => {
-    setError("");
-  };
-
-  if (user.id) {
+  if (userId) {
     return <Redirect to="/" />;
+  }
+
+  let sendEmailError;
+  if (errors.status === 401 && typeof errors.message === "string") {
+    sendEmailError = errors.message;
   }
 
   return (
@@ -67,7 +57,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
               <strong>Forgot password</strong>
             </h3>
             <form onSubmit={handleSubmit}>
-              {isEmailSent && (
+              {isSuccess && (
                 <div className="field">
                   <div className="control">
                     <div className="notification has-text-centered is-size-5">
@@ -81,15 +71,15 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
                 name="email"
                 type="email"
                 label="Email"
-                errorMessage={error}
+                errorMessage={sendEmailError}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <div className="field">
                 <div className="control">
                   <button
                     className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                      loading && "is-loading"
+                      isLoading && "is-loading"
                     }`}
                     type="submit"
                   >

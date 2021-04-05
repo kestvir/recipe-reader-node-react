@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ErrroMessageProps {
-  message: string;
+  message: string | undefined;
   hideErrorMessage: boolean;
 }
 

@@ -1,29 +1,20 @@
 import React from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { State } from "../../utils/@types/types";
-import { logoutURL } from "../../utils/backendUrls";
-import { logout as logoutAction } from "../../redux/authSlice";
+import { logout as logoutAction } from "../../redux/slices/authSlice";
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
+  const userId = useSelector((state: State) => state.auth.id);
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const logout = async () => {
-    try {
-      const resp = await axios.get(logoutURL);
-      if (resp.data === "success") {
-        dispatch(logoutAction());
-        history.push("/");
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const logout = () => {
+    dispatch(logoutAction());
+    history.push("/");
   };
 
   return (
@@ -59,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
 
             <a className="navbar-item">Documentation</a>
 
-            {user.id && (
+            {userId && (
               <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">Recipes</a>
                 <div className="navbar-dropdown">
@@ -75,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                {user.id.length ? (
+                {userId ? (
                   <a className="button is-primary" onClick={logout}>
                     <strong>Log out</strong>
                   </a>

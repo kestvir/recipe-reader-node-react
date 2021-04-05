@@ -7,12 +7,49 @@ export interface User {
   googleId?: string;
 }
 
-export interface AuthState {
-  userObj: User;
+export type AsyncRequestErrorsMessage =
+  | string
+  | SignupAuthErrors
+  | AddOrUpdateRecipeErrors
+  | ResetPasswordErrors
+  | BasicError
+  | SerializedError;
+
+export interface AsyncRequestErrors {
+  status: number;
+  message: AsyncRequestErrorsMessage;
+}
+
+export interface AuthState extends BasicAsyncState {
+  id: string;
+  email: string;
+  facebookId?: string | undefined;
+  googleId?: string | undefined;
+}
+
+export interface MultipleInputFieldFormErrors {
+  emailErrorMessage?: string;
+  passwordErrorMessage: string;
+  confirmPasswordErrorMessage: string;
+}
+
+export interface BasicAsyncState {
+  isLoading: boolean;
+  isSuccess: boolean;
+  errors: CustomAuthError;
+}
+
+export interface CustomAuthError {
+  status: number | null;
+  message: string | MultipleInputFieldFormErrors;
 }
 
 export interface State {
   auth: AuthState;
+  login: BasicAsyncState;
+  signup: BasicAsyncState;
+  forgotPassword: BasicAsyncState;
+  resetPassword: BasicAsyncState;
 }
 
 export interface ValidationErrorData {
@@ -20,17 +57,6 @@ export interface ValidationErrorData {
   param: string;
   value?: string;
   location?: string;
-}
-
-export interface MultipleFieldsAuthErrors {
-  emailErrorMessage: string;
-  passwordErrorMessage: string;
-  confirmPasswordErrorMessage: string;
-}
-
-export interface ResetPasswordErrors {
-  passwordErrorMessage: string;
-  confirmPasswordErrorMessage: string;
 }
 
 export interface AddOrUpdateRecipeErrors {
@@ -49,16 +75,9 @@ export interface Recipe {
   instructions: string;
 }
 
-export interface RecipesError {
-  status: number | null;
-  statusText: string | null;
-}
-
 export interface RecipesState {
   recipes: Recipe[];
   activeRecipe: Recipe;
-  status: string;
-  error: RecipesError | SerializedError;
 }
 
 export interface ImgFile {

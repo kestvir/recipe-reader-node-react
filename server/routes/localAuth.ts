@@ -88,7 +88,6 @@ router.post(
   resetPasswordValidator,
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
-
     checkValidationErrors(errors);
 
     (async () => {
@@ -105,15 +104,14 @@ router.post(
             password: hashedPassword,
           }
         );
+        await user.save();
+        res.send("success");
         if (!user) {
           const error: CustomError = new Error(
             "Password reset token in invalid or has been expired."
           );
           error.statusCode = 401;
           throw error;
-        } else {
-          await user.save();
-          res.send("success");
         }
       } catch (err) {
         if (!err.statusCode) {

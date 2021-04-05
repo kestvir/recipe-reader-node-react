@@ -1,46 +1,38 @@
 import React, { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { useHistory, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { resetPassword } from "../../redux/slices/resetPasswordSlice";
 import Input from "../UI/Input";
-import { checkResetPasswordTokenUrl } from "../../utils/backendUrls";
-import {
-  State,
-  ResetPasswordErrors,
-  ValidationErrorData,
-} from "../../utils/@types/types";
+import { resetPasswordTokenURL } from "../../utils/backendUrls";
+import { State } from "../../utils/@types/types";
 
 interface ResetPasswordProps {}
 
 interface Params {
   token: string;
 }
-
 const initialFormState = { password: "", confirmPassword: "" };
 
-const initialErrorState = {
-  passwordErrorMessage: "",
-  confirmPasswordErrorMessage: "",
-};
-
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
+  const userId = useSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useSelector(
+    (state: State) => state.resetPassword
+  );
+  const dispatch = useDispatch();
+
   const params: Params = useParams();
   const history = useHistory();
 
   const [isTokenValid, setIsTokenValid] = useState(true);
-  const [errors, setErrors] = useState<ResetPasswordErrors>(initialErrorState);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [isPasswordReset, setIsPasswordReset] = useState(false);
   const [form, setForm] = useState(initialFormState);
-  const [displayErrors, setDisplayErrors] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(checkResetPasswordTokenUrl(params.token));
+        const res = await axios.get(resetPasswordTokenURL(params.token));
         if (res.data === "success") {
           setInitialLoading(false);
           setIsTokenValid(true);
@@ -58,85 +50,66 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => {
+        history.push("/login");
+      }, 1700);
+    }
+    if (errors.status === 401) {
+      setIsTokenValid(false);
+      setTimeout(() => {
+        history.push("/");
+      }, 1700);
+    }
+  }, [isSuccess, errors]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const removeErrors = () => {
-    setErrors({ ...initialErrorState });
-  };
-
-  const setResetPasswordErrors = (error: AxiosError) => {
-    let errorsData = { ...initialErrorState };
-    if (error.response) {
-      error.response.data.data.forEach((errorObj: ValidationErrorData) => {
-        if (errorObj.param === "password") {
-          errorsData.passwordErrorMessage = errorObj.msg;
-        } else if (errorObj.param === "confirmPassword") {
-          errorsData.confirmPasswordErrorMessage = errorObj.msg;
-        } else return;
-      });
-    }
-    setErrors(errorsData);
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      setDisplayErrors(false);
-      const res = await axios.post(checkResetPasswordTokenUrl(params.token), {
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      });
-      if (res.data === "success") {
-        setLoading(false);
-        removeErrors();
-        setIsPasswordReset(true);
-        setTimeout(() => {
-          history.push("/login");
-        }, 1700);
-      }
-    } catch (err) {
-      if (err.response.status === 401) {
-        setIsTokenValid(false);
-        setTimeout(() => {
-          history.push("/");
-        }, 1700);
-      } else if (err.response.status === 422) {
-        setResetPasswordErrors(err);
-      }
-      setLoading(false);
-      setDisplayErrors(true);
-      console.log(err);
-    }
+    const { password, confirmPassword } = form;
+    dispatch(resetPassword({ password, confirmPassword, token: params.token }));
   };
+
+  let passwordErrorMessage, confirmPasswordErrorMessage;
+
+  if (errors.status === 422 && typeof errors.message !== "string") {
+    passwordErrorMessage = errors.message.passwordErrorMessage;
+    confirmPasswordErrorMessage = errors.message.confirmPasswordErrorMessage;
+  }
 
   if (initialLoading)
     return (
-      <progress
-        className="progress is-small is-primary has-text-centered"
-        max="100"
-        style={{ width: "800px", margin: "0 auto" }}
-      />
+      <div style={{ minHeight: "calc(100vh - 88px - 56px)" }}>
+        <progress
+          className="progress is-small is-primary has-text-centered"
+          max="100"
+          style={{ width: "100%" }}
+        />
+      </div>
     );
-
-  if (user.id) {
-    return <Redirect to="/" />;
-  }
 
   if (!isTokenValid) {
     return (
-      <div className="columns is-centered">
-        <div className="column is-narrow">
-          <div className="notification is-danger has-text-centered is-size-5">
-            <strong>
-              Password reset token in invalid or has been expired.
-            </strong>
+      <section className="is-justify-content-center	">
+        <div className="columns is-centered">
+          <div className="column is-narrow">
+            <div className="notification is-danger has-text-centered is-size-5">
+              <strong>
+                Password reset token in invalid or has been expired.
+              </strong>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     );
+  }
+
+  if (userId) {
+    return <Redirect to="/" />;
   }
 
   return (
@@ -148,7 +121,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
               <strong>Forgot password</strong>
             </h3>
             <form onSubmit={handleSubmit}>
-              {isPasswordReset && (
+              {isSuccess && (
                 <div className="field">
                   <div className="control">
                     <div className="notification has-text-centered is-size-5">
@@ -162,24 +135,24 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
                 name="password"
                 type="password"
                 label="New Password"
-                errorMessage={errors.passwordErrorMessage}
+                errorMessage={passwordErrorMessage}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <Input
                 value={form.confirmPassword}
                 name="confirmPassword"
                 type="password"
                 label="Confirm New Password"
-                errorMessage={errors.confirmPasswordErrorMessage}
+                errorMessage={confirmPasswordErrorMessage}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <div className="field">
                 <div className="control">
                   <button
                     className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                      loading && "is-loading"
+                      isLoading && "is-loading"
                     }`}
                     type="submit"
                   >

@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Layout from "./components/Layout";
 import { BrowserRouter as Router } from "react-router-dom";
-import { getUser } from "./utils/functions";
+import { getUser } from "./redux/slices/authSlice";
 import BaseRouter from "./routes/BaseRouter";
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    getUser(dispatch);
+    dispatch(getUser());
   }, []);
 
   return (

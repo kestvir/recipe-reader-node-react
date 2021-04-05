@@ -1,93 +1,51 @@
-import React, { useState } from "react";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import SocialAuthButtons from "./SocialAuthButtons";
 import Input from "../UI/Input";
-import { signupURL } from "../../utils/backendUrls";
-import { getUser } from "../../utils/functions";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  State,
-  MultipleFieldsAuthErrors,
-  ValidationErrorData,
-} from "../../utils/@types/types";
+import { signup } from "../../redux/slices/signupSlice";
+import { State } from "../../utils/@types/types";
 
 interface SignupProps {}
 
 const initialFormState = { email: "", password: "", confirmPassword: "" };
-const initialErrorState = {
-  emailErrorMessage: "",
-  passwordErrorMessage: "",
-  confirmPasswordErrorMessage: "",
-};
 
 const Signup: React.FC<SignupProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
-  const dispatch = useDispatch();
-
-  const [form, setForm] = useState(initialFormState);
-  const [errors, setErrors] = useState<MultipleFieldsAuthErrors>(
-    initialErrorState
+  const userId = useSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useSelector(
+    (state: State) => state.signup
   );
-  const [loading, setLoading] = useState(false);
-  const [displayErrors, setDisplayErrors] = useState(false);
 
+  const dispatch = useDispatch();
   const history = useHistory();
 
-  const setSignupErrors = (error: AxiosError) => {
-    let errorsData = { ...initialErrorState };
-    if (error.response) {
-      error.response.data.data.forEach((errorObj: ValidationErrorData) => {
-        if (errorObj.param === "email") {
-          errorsData.emailErrorMessage = errorObj.msg;
-        } else if (errorObj.param === "password") {
-          errorsData.passwordErrorMessage = errorObj.msg;
-        } else if (errorObj.param === "confirmPassword") {
-          errorsData.confirmPasswordErrorMessage = errorObj.msg;
-        } else return;
-      });
-    }
-    setErrors(errorsData);
-  };
+  const [form, setForm] = useState(initialFormState);
 
-  const removeErrors = () => {
-    setErrors({ ...initialErrorState });
-  };
+  useEffect(() => {
+    if (isSuccess) {
+      history.push("/");
+    }
+  }, [isSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      setDisplayErrors(false);
-      const { email, password, confirmPassword } = form;
-      const signupObj = {
-        email,
-        password,
-        confirmPassword,
-      };
-      const res = await axios.post(signupURL, signupObj);
-      if (res.data === "success") {
-        setLoading(false);
-        removeErrors();
-        getUser(dispatch);
-        history.push("/");
-      }
-    } catch (err) {
-      if (err.response.status === 422) {
-        console.log(err.response);
-        setSignupErrors(err);
-      }
-      setLoading(false);
-      setDisplayErrors(true);
-      console.error(err);
-    }
+    const { email, password, confirmPassword } = form;
+    dispatch(signup({ email, password, confirmPassword }));
   };
 
-  if (user.id) {
+  let emailErrorMessage, passwordErrorMessage, confirmPasswordErrorMessage;
+
+  if (errors.status === 422 && typeof errors.message !== "string") {
+    emailErrorMessage = errors.message.emailErrorMessage;
+    passwordErrorMessage = errors.message.passwordErrorMessage;
+    confirmPasswordErrorMessage = errors.message.confirmPasswordErrorMessage;
+  }
+
+  if (userId) {
     return <Redirect to="/" />;
   }
 
@@ -107,33 +65,33 @@ const Signup: React.FC<SignupProps> = ({}) => {
                 name="email"
                 type="email"
                 label="Email"
-                errorMessage={errors.emailErrorMessage}
+                errorMessage={emailErrorMessage}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <Input
                 value={form.password}
                 name="password"
                 type="password"
                 label="Password"
-                errorMessage={errors.passwordErrorMessage}
+                errorMessage={passwordErrorMessage}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <Input
                 value={form.confirmPassword}
                 name="confirmPassword"
                 type="password"
                 label="Confirm password"
-                errorMessage={errors.confirmPasswordErrorMessage}
+                errorMessage={confirmPasswordErrorMessage}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <div className="field">
                 <div className="control">
                   <button
                     className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                      loading && "is-loading"
+                      isLoading && "is-loading"
                     }`}
                     type="submit"
                   >

@@ -66,6 +66,7 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: true,
   },
   (err) => {
     if (err) return console.error(err);

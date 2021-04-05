@@ -1,64 +1,48 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
-import { loginURL } from "../../utils/backendUrls";
-import { getUser } from "../../utils/functions";
 import { State } from "../../utils/@types/types";
+import { login } from "../../redux/slices/loginSlice";
 
 interface LoginProps {}
 
 const initialFormState = { email: "", password: "" };
 
 const Login: React.FC<LoginProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
-
+  const userId = useSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useSelector(
+    (state: State) => state.login
+  );
   const dispatch = useDispatch();
-
-  const [form, setForm] = useState(initialFormState);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [displayErrors, setDisplayErrors] = useState(false);
 
   const history = useHistory();
 
-  const storeLoginErrors = () => {
-    setError("Invalid username or password.");
-  };
+  const [form, setForm] = useState(initialFormState);
+
+  useEffect(() => {
+    if (isSuccess) {
+      history.push("/");
+    }
+  }, [isSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    try {
-      setLoading(true);
-      setDisplayErrors(false);
-      const res = await axios.post(loginURL, {
-        email: form.email,
-        password: form.password,
-      });
-      if (res.data === "success") {
-        setLoading(false);
-        setError("");
-        getUser(dispatch);
-        history.push("/");
-      }
-    } catch (err) {
-      if (err.response.status === 401) {
-        storeLoginErrors();
-      }
-      setLoading(false);
-      setDisplayErrors(true);
-      console.error(err);
-    }
+    const { email, password } = form;
+    dispatch(login({ email, password }));
   };
 
-  if (user.id) {
+  let loginError;
+  if (errors.status === 401 && typeof errors.message === "string") {
+    loginError = errors.message;
+  }
+
+  if (userId) {
     return <Redirect to="/" />;
   }
 
@@ -78,24 +62,24 @@ const Login: React.FC<LoginProps> = ({}) => {
                 name="email"
                 type="email"
                 label="Email"
-                errorMessage={error}
+                errorMessage={loginError}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <Input
                 value={form.password}
                 name="password"
                 type="password"
                 label="Password"
-                errorMessage={error}
+                errorMessage={loginError}
                 handleChange={handleChange}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
               <div className="field">
                 <div className="control">
                   <button
                     className={`button is-primary has-text-centered is-fullwidth is-size-5 ${
-                      loading && "is-loading"
+                      isLoading && "is-loading"
                     }`}
                     type="submit"
                   >

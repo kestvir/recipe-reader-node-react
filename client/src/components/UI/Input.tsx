@@ -9,7 +9,7 @@ interface InputProps {
   label: string;
   type: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  errorMessage: string;
+  errorMessage: string | undefined;
   displayErrors?: boolean;
 }
 

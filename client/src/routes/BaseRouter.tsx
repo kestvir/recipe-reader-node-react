@@ -13,7 +13,7 @@ import { State } from "../utils/@types/types";
 interface routesProps {}
 
 const BaseRouter: React.FC<routesProps> = ({}) => {
-  const user = useSelector((state: State) => state.auth.userObj);
+  const userId = useSelector((state: State) => state.auth.id);
 
   return (
     <Switch>
@@ -25,7 +25,7 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
       <ProtectedRoute
         path="/recipes/add"
         component={AddRecipe}
-        isAuth={!!user.id}
+        isAuth={!!userId}
       />
     </Switch>
   );
