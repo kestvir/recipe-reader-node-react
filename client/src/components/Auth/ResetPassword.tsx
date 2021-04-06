@@ -6,7 +6,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { resetPassword } from "../../redux/slices/resetPasswordSlice";
 import Input from "../UI/Input";
 import { resetPasswordTokenURL } from "../../utils/backendUrls";
-import { State } from "../../utils/@types/types";
+import {
+  State,
+  MultipleAuthInputFieldFormErrors,
+} from "../../utils/@types/types";
 
 interface ResetPasswordProps {}
 
@@ -76,10 +79,11 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
 
   let passwordErrorMessage, confirmPasswordErrorMessage;
 
-  if (errors.status === 422 && typeof errors.message !== "string") {
-    passwordErrorMessage = errors.message.passwordErrorMessage;
-    confirmPasswordErrorMessage = errors.message.confirmPasswordErrorMessage;
-  }
+  //   const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
+  //   if (errors.status === 422) {
+  //     passwordErrorMessage = authErrorMessages.passwordErrorMessage;
+  //     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
+  //   }
 
   if (initialLoading)
     return (

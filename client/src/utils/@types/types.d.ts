@@ -7,19 +7,6 @@ export interface User {
   googleId?: string;
 }
 
-export type AsyncRequestErrorsMessage =
-  | string
-  | SignupAuthErrors
-  | AddOrUpdateRecipeErrors
-  | ResetPasswordErrors
-  | BasicError
-  | SerializedError;
-
-export interface AsyncRequestErrors {
-  status: number;
-  message: AsyncRequestErrorsMessage;
-}
-
 export interface AuthState extends BasicAsyncState {
   id: string;
   email: string;
@@ -27,7 +14,7 @@ export interface AuthState extends BasicAsyncState {
   googleId?: string | undefined;
 }
 
-export interface MultipleInputFieldFormErrors {
+export interface MultipleAuthInputFieldFormErrors {
   emailErrorMessage?: string;
   passwordErrorMessage: string;
   confirmPasswordErrorMessage: string;
@@ -36,12 +23,30 @@ export interface MultipleInputFieldFormErrors {
 export interface BasicAsyncState {
   isLoading: boolean;
   isSuccess: boolean;
-  errors: CustomAuthError;
+  errors: CustomAuthError | CustomRecipeRequestError;
 }
 
 export interface CustomAuthError {
   status: number | null;
-  message: string | MultipleInputFieldFormErrors;
+  message: string | MultipleAuthInputFieldFormErrors;
+}
+
+export interface CustomRecipeRequestError {
+  status: number | null;
+  message: string | AddOrUpdateRecipeErrors;
+}
+
+export interface AddOrUpdateRecipeErrors {
+  titleErrorMessage: string;
+  categoryErrorMessage: string;
+  imgErrorMessage: string;
+  ingredientsErrorMessage: string;
+  instructionsErrorMessage: string;
+}
+
+export interface RecipesState {
+  recipes: Recipe[];
+  activeRecipe: Recipe;
 }
 
 export interface State {
@@ -59,25 +64,12 @@ export interface ValidationErrorData {
   location?: string;
 }
 
-export interface AddOrUpdateRecipeErrors {
-  titleErrorMessage: string;
-  categoryErrorMessage: string;
-  imgErrorMessage: string;
-  ingredientsErrorMessage: string;
-  instructionsErrorMessage: string;
-}
-
 export interface Recipe {
   title: string;
   category: string;
-  img: Blob | string;
+  img: string | ArrayBuffer | null | Blob;
   ingredients: string;
   instructions: string;
-}
-
-export interface RecipesState {
-  recipes: Recipe[];
-  activeRecipe: Recipe;
 }
 
 export interface ImgFile {

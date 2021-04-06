@@ -3,13 +3,15 @@ import {
   CustomAuthError,
   BasicAsyncState,
   ValidationErrorData,
-  MultipleInputFieldFormErrors,
+  MultipleAuthInputFieldFormErrors,
+  AddOrUpdateRecipeErrors,
 } from "../utils/@types/types";
+import { initialAddOrUpdateRecipeErrors } from "../utils/constants";
 import { ActionReducerMapBuilder, AsyncThunk } from "@reduxjs/toolkit";
 
 export const convertToCustomErrObj = (
   status: number,
-  message: MultipleInputFieldFormErrors | string
+  message: MultipleAuthInputFieldFormErrors | string
 ) => {
   const errorObj = {
     status,
@@ -18,9 +20,9 @@ export const convertToCustomErrObj = (
   return errorObj;
 };
 
-export const setupMultipleErrors = (
+export const setupMultipleAuthErrors = (
   error: AxiosError,
-  initialErrors: MultipleInputFieldFormErrors
+  initialErrors: MultipleAuthInputFieldFormErrors
 ) => {
   let errorsData = { ...initialErrors };
   if (error.response) {
@@ -35,6 +37,35 @@ export const setupMultipleErrors = (
     });
   }
   return errorsData;
+};
+
+export const setupMultipleRecipeErrors = (errorData: ValidationErrorData[]) => {
+  const formattedErrorObj: AddOrUpdateRecipeErrors = {
+    ...initialAddOrUpdateRecipeErrors,
+  };
+  errorData.forEach((error) => {
+    const { param, msg } = error;
+    switch (param) {
+      case "title":
+        formattedErrorObj.titleErrorMessage = msg;
+        break;
+      case "category":
+        formattedErrorObj.categoryErrorMessage = msg;
+        break;
+      case "img":
+        formattedErrorObj.imgErrorMessage = msg;
+        break;
+      case "ingredients":
+        formattedErrorObj.ingredientsErrorMessage = msg;
+        break;
+      case "instructions":
+        formattedErrorObj.instructionsErrorMessage = msg;
+        break;
+      default:
+        return;
+    }
+  });
+  return formattedErrorObj;
 };
 
 const getSerializedErrorStatus = (errorMessage: string | undefined) => {

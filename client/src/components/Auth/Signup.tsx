@@ -5,7 +5,10 @@ import SocialAuthButtons from "./SocialAuthButtons";
 import Input from "../UI/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { signup } from "../../redux/slices/signupSlice";
-import { State } from "../../utils/@types/types";
+import {
+  State,
+  MultipleAuthInputFieldFormErrors,
+} from "../../utils/@types/types";
 
 interface SignupProps {}
 
@@ -39,11 +42,12 @@ const Signup: React.FC<SignupProps> = ({}) => {
 
   let emailErrorMessage, passwordErrorMessage, confirmPasswordErrorMessage;
 
-  if (errors.status === 422 && typeof errors.message !== "string") {
-    emailErrorMessage = errors.message.emailErrorMessage;
-    passwordErrorMessage = errors.message.passwordErrorMessage;
-    confirmPasswordErrorMessage = errors.message.confirmPasswordErrorMessage;
-  }
+  //   const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
+  //   if (errors.status === 422) {
+  //     emailErrorMessage = authErrorMessages.emailErrorMessage;
+  //     passwordErrorMessage = authErrorMessages.passwordErrorMessage;
+  //     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
+  //   }
 
   if (userId) {
     return <Redirect to="/" />;

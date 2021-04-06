@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { CustomAuthError, BasicAsyncState } from "../../utils/@types/types";
+import { CustomAuthError } from "../../utils/@types/types";
 import { resetPasswordTokenURL } from "../../utils/backendUrls";
-// import { initialBasicAsyncState } from "../../utils/constants";
-import { apiReducerBuilder, setupMultipleErrors } from "../../utils/functions";
-
-export const initialBasicAsyncState: BasicAsyncState = {
-  isLoading: false,
-  isSuccess: false,
-  errors: { status: null, message: "" },
-};
+import { initialBasicAsyncState } from "../../utils/constants";
+import {
+  apiReducerBuilder,
+  setupMultipleAuthErrors,
+} from "../../utils/functions";
 
 interface ResetPasswordData {
   password: string;
@@ -39,7 +36,7 @@ export const resetPassword = createAsyncThunk<
       console.error(err);
       const { status, statusText, data } = err.response;
       if (status === 422) {
-        const formattedErrors = setupMultipleErrors(
+        const formattedErrors = setupMultipleAuthErrors(
           err,
           initialResetPasswordErrors
         );
@@ -62,19 +59,7 @@ const resetPasswordSlice = createSlice({
     ...initialBasicAsyncState,
   },
   reducers: {},
-  extraReducers: (builder) =>
-    builder
-      .addCase(resetPassword.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(resetPassword.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-      })
-      .addCase(resetPassword.rejected, (state, action) => {
-        state.isLoading = false;
-        if (action.payload) state.errors = action.payload;
-      }),
+  extraReducers: (builder) => apiReducerBuilder(builder, resetPassword),
 });
 
 export const {} = resetPasswordSlice.actions;

@@ -10,7 +10,7 @@ import { initialBasicAsyncState } from "../../utils/constants";
 import {
   convertToCustomErrObj,
   apiReducerBuilder,
-  setupMultipleErrors,
+  setupMultipleAuthErrors,
 } from "../../utils/functions";
 
 interface UserSignupData {
@@ -40,7 +40,7 @@ export const signup = createAsyncThunk<
     let errorObj: CustomAuthError;
     const { status, statusText } = err.response;
     if (status === 422) {
-      const formattedErrors: MultipleInputFieldFormErrors = setupMultipleErrors(
+      const formattedErrors: MultipleInputFieldFormErrors = setupMultipleAuthErrors(
         err,
         initialSignupErrors
       );

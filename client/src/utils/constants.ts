@@ -7,3 +7,11 @@ export const initialBasicAsyncState: BasicAsyncState = {
   isSuccess: false,
   errors: { status: null, message: "" },
 };
+
+export const initialAddOrUpdateRecipeErrors = {
+  titleErrorMessage: "",
+  imgErrorMessage: "",
+  categoryErrorMessage: "",
+  ingredientsErrorMessage: "",
+  instructionsErrorMessage: "",
+};

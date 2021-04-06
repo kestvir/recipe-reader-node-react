@@ -3,14 +3,12 @@ import axios from "axios";
 import {
   Recipe,
   RecipesState,
-  CustomAuthError,
+  CustomRecipeRequestError,
 } from "../../utils/@types/types";
-import { getAllRecipesURL } from "../../utils/backendUrls";
+import { getAllRecipesURL, addRecipeURL } from "../../utils/backendUrls";
 import { initialBasicAsyncState } from "../../utils/constants";
-import {
-  convertToCustomErrObj,
-  apiReducerBuilder,
-} from "../../utils/functions";
+import { setupMultipleRecipeErrors } from "../../utils/functions";
+import { isThunk, thunkHandler } from "../../utils/reduxHelper";
 
 export const initialRecipesState: RecipesState = {
   recipes: [],
@@ -24,21 +22,41 @@ export const initialRecipesState: RecipesState = {
 };
 
 export const getAllRecipes = createAsyncThunk<
-  Recipe[],
+  void,
   any,
-  { rejectValue: CustomAuthError }
->("recipes/getAllRecipes", async (_, thunkAPI) => {
+  { rejectValue: CustomRecipeRequestError }
+>("recipes/getAllRecipes", async (_, { dispatch, rejectWithValue }) => {
   try {
-    const res: Recipe[] = await axios.get(getAllRecipesURL);
-    console.log(res);
-    return res;
+    const res = await axios.get(getAllRecipesURL);
+    dispatch(setRecipes({ recipes: res.data }));
   } catch (err) {
     console.log(err);
     const { status, statusText } = err.response;
-    const errorObj = convertToCustomErrObj(status, statusText);
-    return thunkAPI.rejectWithValue(errorObj);
+    return rejectWithValue({ status, message: statusText });
   }
 });
+
+export const addOrUpdateRecipe = createAsyncThunk<
+  void,
+  Recipe,
+  { rejectValue: CustomRecipeRequestError }
+>(
+  "recipes/addOrUpdateRecipe",
+  async (recipeData, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await axios.post(addRecipeURL, { ...recipeData });
+      dispatch(addRecipe({ recipe: res.data }));
+    } catch (err) {
+      console.log(err);
+      const { status, statusText, data } = err.response;
+      if (status === 422) {
+        const formattedErrors = setupMultipleRecipeErrors(data.data);
+        return rejectWithValue({ status, message: formattedErrors });
+      }
+      return rejectWithValue({ status, message: statusText });
+    }
+  }
+);
 
 const recipesSlice = createSlice({
   name: "recipes",
@@ -47,10 +65,18 @@ const recipesSlice = createSlice({
     setRecipes: (state, { payload }: PayloadAction<{ recipes: Recipe[] }>) => {
       state.recipes = payload.recipes;
     },
+    addRecipe: (state, { payload }: PayloadAction<{ recipe: Recipe }>) => {
+      state.recipes.push(payload.recipe);
+    },
   },
-  extraReducers: (builder) => apiReducerBuilder(builder, getAllRecipes),
+  extraReducers: (builder) =>
+    builder
+      .addCase(getAllRecipes.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addMatcher(isThunk(getAllRecipes, addOrUpdateRecipe), thunkHandler),
 });
 
-export const {} = recipesSlice.actions;
+export const { setRecipes, addRecipe } = recipesSlice.actions;
 
 export default recipesSlice.reducer;

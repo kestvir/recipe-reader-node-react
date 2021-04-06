@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { EditorState, convertToRaw } from "draft-js";
 import "@nick4fake/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { addRecipeURL } from "../../../utils/backendUrls";
 import {
   ImgFile,
-  ValidationErrorData,
+  State,
   AddOrUpdateRecipeErrors,
 } from "../../../utils/@types/types";
 import Input from "../../UI/Input";
 import SelectImg from "./SelectImg";
 import IngredientOrInstructionTextField from "./IngredientOrInstructionTextField";
 import SelectCategory from "./SelectCategory";
+import { addOrUpdateRecipe } from "../../../redux/slices/recipesSlice";
 
 interface AddOrUpdateRecipeProps {}
 
@@ -25,7 +25,12 @@ const initialAddOrUpdateRecipeErrors = {
 };
 
 const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
-  const [loading, setLoading] = useState(false);
+  const { isLoading, isSuccess, errors } = useSelector(
+    (state: State) => state.signup
+  );
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   const [title, setTitle] = useState("");
   const [selectedImg, setSelectedImg] = useState<ImgFile>({
     name: "Select image...",
@@ -38,41 +43,12 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   const [instructions, setInstructions] = useState(() =>
     EditorState.createEmpty()
   );
-  const [errors, setErrors] = useState<AddOrUpdateRecipeErrors>({
-    ...initialAddOrUpdateRecipeErrors,
-  });
-  const [displayErrors, setDisplayErrors] = useState(false);
 
-  const history = useHistory();
-
-  const storeErrors = (errorData: ValidationErrorData[]) => {
-    const newErrorObj: AddOrUpdateRecipeErrors = {
-      ...initialAddOrUpdateRecipeErrors,
-    };
-    errorData.forEach((error) => {
-      const { param, msg } = error;
-      switch (param) {
-        case "title":
-          newErrorObj.titleErrorMessage = msg;
-          break;
-        case "category":
-          newErrorObj.categoryErrorMessage = msg;
-          break;
-        case "img":
-          newErrorObj.imgErrorMessage = msg;
-          break;
-        case "ingredients":
-          newErrorObj.ingredientsErrorMessage = msg;
-          break;
-        case "instructions":
-          newErrorObj.instructionsErrorMessage = msg;
-          break;
-        default:
-          return;
-      }
-    });
-    setErrors(newErrorObj);
-  };
+  useEffect(() => {
+    if (isSuccess || errors.status === 401) {
+      history.push("/");
+    }
+  }, [isSuccess, errors]);
 
   const getAndConvertEditorStateToStr = () => {
     let ingredientsStr;
@@ -107,30 +83,27 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
       ingredients: ingredientsStr,
       instructions: instructionsStr,
     };
-
-    try {
-      setLoading(true);
-      setDisplayErrors(false);
-      const res = await axios.post(addRecipeURL, recipeObj);
-      if (res.data === "success") {
-        setLoading(false);
-      }
-    } catch (err) {
-      setLoading(false);
-      if (err.response.status === 401) return history.push("/login");
-      setDisplayErrors(true);
-      storeErrors(err.response.data.data);
-      console.error(err.response);
-    }
+    dispatch(addOrUpdateRecipe(recipeObj));
   };
 
-  const {
+  let {
     titleErrorMessage,
     categoryErrorMessage,
     imgErrorMessage,
     ingredientsErrorMessage,
     instructionsErrorMessage,
-  } = errors;
+  } = initialAddOrUpdateRecipeErrors;
+
+  //   const addOrUpdateRecipeErrorMessages = errors.message as AddOrUpdateRecipeErrors;
+  //   if (errors.status === 422) {
+  //     titleErrorMessage = addOrUpdateRecipeErrorMessages.titleErrorMessage;
+  //     categoryErrorMessage = addOrUpdateRecipeErrorMessages.categoryErrorMessage;
+  //     imgErrorMessage = addOrUpdateRecipeErrorMessages.imgErrorMessage;
+  //     ingredientsErrorMessage =
+  //       addOrUpdateRecipeErrorMessages.ingredientsErrorMessage;
+  //     instructionsErrorMessage =
+  //       addOrUpdateRecipeErrorMessages.instructionsErrorMessage;
+  //   }
 
   return (
     <section className="section" id="addRecipeSection">
@@ -145,6 +118,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                 label="Recipe title"
                 handleChange={(e) => setTitle(e.target.value)}
                 errorMessage={titleErrorMessage}
+                displayErrors={!isLoading}
               />
 
               <IngredientOrInstructionTextField
@@ -152,7 +126,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                 setEditorState={setIngredients}
                 label="Ingredients"
                 errorMessage={ingredientsErrorMessage}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
 
               <IngredientOrInstructionTextField
@@ -160,28 +134,28 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                 setEditorState={setInstructions}
                 label="Instructions"
                 errorMessage={instructionsErrorMessage}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
 
               <SelectCategory
                 category={category}
                 setCategory={setCategory}
                 errorMessage={categoryErrorMessage}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
 
               <SelectImg
                 selectedImg={selectedImg}
                 setSelectedImg={setSelectedImg}
                 errorMessage={imgErrorMessage}
-                displayErrors={displayErrors}
+                displayErrors={!isLoading}
               />
 
               <div className="field is-flex is-justify-content-flex-end	">
                 <div className="control">
                   <button
                     className={`button is-primary has-text-centered is-size-5 ${
-                      loading && "is-loading"
+                      isLoading && "is-loading"
                     }`}
                     type="submit"
                   >
