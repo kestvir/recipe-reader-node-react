@@ -1,15 +1,15 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { State } from "../../utils/@types/types";
+import { State } from "../../shared/types";
 import { logout as logoutAction } from "../../redux/slices/authSlice";
 
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({}) => {
-  const userId = useSelector((state: State) => state.auth.id);
-  const dispatch = useDispatch();
+  const userId = useAppSelector((state: State) => state.auth.id);
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const logout = () => {

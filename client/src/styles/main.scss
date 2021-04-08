@@ -1,0 +1,16 @@
+@charset "utf-8";
+
+@import "variables";
+@import "richTextEditor";
+
+body {
+    background: $light;
+}
+
+section {
+    min-height: calc(100vh - 88px - 56px);
+    display: flex !important;
+    align-items: center;
+}
+
+@import "../../node_modules/bulma/bulma.sass";

@@ -3,24 +3,21 @@ import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import SocialAuthButtons from "./SocialAuthButtons";
 import Input from "../UI/Input";
-import { useDispatch, useSelector } from "react-redux";
-import { signup } from "../../redux/slices/signupSlice";
-import {
-  State,
-  MultipleAuthInputFieldFormErrors,
-} from "../../utils/@types/types";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { signup, resetReqState } from "../../redux/slices/authSlice";
+import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
 
 interface SignupProps {}
 
 const initialFormState = { email: "", password: "", confirmPassword: "" };
 
 const Signup: React.FC<SignupProps> = ({}) => {
-  const userId = useSelector((state: State) => state.auth.id);
-  const { isLoading, isSuccess, errors } = useSelector(
-    (state: State) => state.signup
+  const userId = useAppSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useAppSelector(
+    (state: State) => state.auth
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const [form, setForm] = useState(initialFormState);
@@ -29,6 +26,10 @@ const Signup: React.FC<SignupProps> = ({}) => {
     if (isSuccess) {
       history.push("/");
     }
+
+    return () => {
+      dispatch(resetReqState());
+    };
   }, [isSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -42,12 +43,12 @@ const Signup: React.FC<SignupProps> = ({}) => {
 
   let emailErrorMessage, passwordErrorMessage, confirmPasswordErrorMessage;
 
-  //   const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
-  //   if (errors.status === 422) {
-  //     emailErrorMessage = authErrorMessages.emailErrorMessage;
-  //     passwordErrorMessage = authErrorMessages.passwordErrorMessage;
-  //     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
-  //   }
+  const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
+  if (errors.status === 422) {
+    emailErrorMessage = authErrorMessages.emailErrorMessage;
+    passwordErrorMessage = authErrorMessages.passwordErrorMessage;
+    confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
+  }
 
   if (userId) {
     return <Redirect to="/" />;

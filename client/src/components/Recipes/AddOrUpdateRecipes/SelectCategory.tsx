@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { dishCategories } from "../../../utils/constants";
+import { dishCategories } from "../../../shared/constants";
 import ErrorMessage from "../../UI/ErrorMessage";
 
 interface SelectCategoryProps {

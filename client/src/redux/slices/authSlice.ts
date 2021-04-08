@@ -1,34 +1,161 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { User } from "../../utils/@types/types";
-import { getUserURL, logoutURL } from "../../utils/backendUrls";
 import {
-  convertToCustomErrObj,
-  apiReducerBuilder,
-} from "../../utils/functions";
-import { CustomAuthError } from "../../utils/@types/types";
-import { initialBasicAsyncState } from "../../utils/constants";
+  initialReqState,
+  getUserURL,
+  loginURL,
+  logoutURL,
+  signupURL,
+  forgotPasswordURL,
+  resetPasswordTokenURL,
+} from "../../shared/constants";
+import { isThunk, thunkHandler } from "../asyncRequestStatusReducer";
+import { AuthReqError, AuthState, User } from "../../shared/types";
+import { setupMultipleAuthErrors } from "../../utils/errorUtils";
+import {
+  getUserFromLocalStorage,
+  removeUserFromLocalStorage,
+  saveUserToLocalStorage,
+} from "../../utils/userUtils";
 
-export const initialUserInfo: User = {
-  id: "",
-  email: "",
-  facebookId: "",
-  googleId: "",
+interface UserSignupData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface UserLoginData {
+  email: string;
+  password: string;
+}
+
+type ForgotPasswordEmail = string;
+
+interface ResetPasswordData {
+  password: string;
+  confirmPassword: string;
+  token: string;
+}
+
+const initialSignupErrors = {
+  emailErrorMessage: "",
+  passwordErrorMessage: "",
+  confirmPasswordErrorMessage: "",
 };
 
-const loadCurrentUser = () => {
-  const userStr = localStorage.getItem("recipeReaderUser");
-  if (typeof userStr === "string") {
-    return JSON.parse(userStr);
-  } else return initialUserInfo;
+const initialResetPasswordErrors = {
+  passwordErrorMessage: "",
+  confirmPasswordErrorMessage: "",
 };
 
-const userInfo = loadCurrentUser();
+const initialUserState: User = getUserFromLocalStorage();
+
+const initialAuthState: AuthState = {
+  ...initialUserState,
+  ...initialReqState,
+};
+
+export const resetPassword = createAsyncThunk<
+  void,
+  ResetPasswordData,
+  { rejectValue: AuthReqError }
+>("AUTH/resetPassword", async (resetPasswordData, { rejectWithValue }) => {
+  const { password, confirmPassword, token } = resetPasswordData;
+  try {
+    await axios.post(resetPasswordTokenURL(token), {
+      password,
+      confirmPassword,
+    });
+  } catch (err) {
+    console.error(err);
+    const { status, statusText, data } = err.response;
+    if (status === 422) {
+      const formattedErrors = setupMultipleAuthErrors(
+        err,
+        initialResetPasswordErrors
+      );
+      return rejectWithValue({ status, message: formattedErrors });
+    }
+    if (status === 401) {
+      return rejectWithValue({
+        status,
+        message: data.message,
+      });
+    }
+    return rejectWithValue({ status, message: statusText });
+  }
+});
+
+export const forgotPassword = createAsyncThunk<
+  void,
+  ForgotPasswordEmail,
+  { rejectValue: AuthReqError }
+>("auth/forgotPassword", async (email, { rejectWithValue }) => {
+  try {
+    await axios.post(forgotPasswordURL, { email });
+  } catch (err) {
+    console.error(err);
+    const { status, statusText, data } = err.response;
+    if (status === 401) {
+      return rejectWithValue({
+        status,
+        message: data.message,
+      });
+    } else {
+      return rejectWithValue({ status, message: statusText });
+    }
+  }
+});
+
+export const signup = createAsyncThunk<
+  void,
+  UserSignupData,
+  { rejectValue: AuthReqError }
+>("auth/signup", async (userSingupDataObj, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post(signupURL, { ...userSingupDataObj });
+    if (response.status === 200) {
+      dispatch(getUser());
+    }
+  } catch (err) {
+    console.error(err);
+    const { status, statusText } = err.response;
+    if (status === 422) {
+      const formattedErrors = setupMultipleAuthErrors(err, initialSignupErrors);
+      return rejectWithValue({ status, message: formattedErrors });
+    }
+    return rejectWithValue({ status, message: statusText });
+  }
+});
+
+export const login = createAsyncThunk<
+  void,
+  UserLoginData,
+  { rejectValue: AuthReqError }
+>("auth/login", async (userLoginDataObj, { dispatch, rejectWithValue }) => {
+  try {
+    const response = await axios.post(loginURL, { ...userLoginDataObj });
+    if (response.status === 200) {
+      dispatch(getUser());
+    }
+  } catch (err) {
+    console.error(err);
+    const { status, statusText } = err.response;
+    if (status === 401) {
+      return rejectWithValue({
+        status,
+        message: "Invalid username or password.",
+      });
+    } else {
+      return rejectWithValue({ status, message: statusText });
+    }
+  }
+});
 
 export const logout = createAsyncThunk<
   void,
   undefined,
-  { rejectValue: CustomAuthError }
+  { rejectValue: AuthReqError }
 >("auth/logout", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(logoutURL);
@@ -37,15 +164,14 @@ export const logout = createAsyncThunk<
     }
   } catch (err) {
     const { status, statusText } = err.response;
-    const errorObj = convertToCustomErrObj(status, statusText);
-    return rejectWithValue(errorObj);
+    return rejectWithValue({ status, message: statusText });
   }
 });
 
 export const getUser = createAsyncThunk<
   void,
   undefined,
-  { rejectValue: CustomAuthError }
+  { rejectValue: AuthReqError }
 >("auth/getUser", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getUserURL);
@@ -53,33 +179,27 @@ export const getUser = createAsyncThunk<
       dispatch(setUser({ userObj: res.data }));
     } else {
       dispatch(clearUser());
-      localStorage.removeItem("recipeReaderUser");
+      removeUserFromLocalStorage();
     }
   } catch (err) {
     console.error(err);
     const { status, statusText } = err.response;
-    const errorObj = convertToCustomErrObj(status, statusText);
-    return rejectWithValue(errorObj);
+    return rejectWithValue({ status, message: statusText });
   }
 });
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    ...userInfo,
-    ...initialBasicAsyncState,
-  },
+  initialState: { ...initialAuthState },
   reducers: {
     setUser: (state, { payload }: PayloadAction<{ userObj: User }>) => {
       const { id, email, googleId, facebookId } = payload.userObj;
       state.id = id;
       state.email = email;
       if (googleId) state.googleId = googleId;
-      if (facebookId) state.facebookId = facebookId;
-      localStorage.setItem(
-        "recipeReaderUser",
-        JSON.stringify({ id, email, googleId, facebookId })
-      );
+      else if (facebookId) state.facebookId = facebookId;
+
+      saveUserToLocalStorage(id, email, googleId, facebookId);
     },
     clearUser: (state) => {
       state.id = "";
@@ -88,10 +208,24 @@ const authSlice = createSlice({
       state.facebookId = "";
       localStorage.removeItem("recipeReaderUser");
     },
+    resetReqState: (state) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.errors.status = null;
+      state.errors.message = "";
+    },
   },
-  extraReducers: (builder) => apiReducerBuilder(builder, getUser),
+  extraReducers: (builder) =>
+    builder
+      .addCase(getUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addMatcher(
+        isThunk(getUser, signup, login, logout, forgotPassword, resetPassword),
+        thunkHandler
+      ),
 });
 
-export const { setUser, clearUser } = authSlice.actions;
+export const { setUser, clearUser, resetReqState } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,3 +1,21 @@
+import { ReqStatus } from "./types";
+
+export const dishCategories = ["entree", "main", "desert"];
+
+export const initialReqState: ReqStatus = {
+  isLoading: false,
+  isSuccess: false,
+  errors: { status: null, message: "" },
+};
+
+export const initialAddOrUpdateRecipeErrors = {
+  titleErrorMessage: "",
+  imgErrorMessage: "",
+  categoryErrorMessage: "",
+  ingredientsErrorMessage: "",
+  instructionsErrorMessage: "",
+};
+
 const BASE_API_URL = "http://localhost:5000";
 
 const socialAuthURL = "/auth";
@@ -5,6 +23,9 @@ const recipesURL = "/recipes";
 
 export const socialAuthEndpoint = `${BASE_API_URL}${socialAuthURL}`;
 
+export const recipesEndpoint = `${BASE_API_URL}${recipesURL}`;
+
+// AUTH URLS
 export const socialAuthGoogleURL = `${socialAuthEndpoint}/google`;
 
 export const socialAuthFacebookURL = `${socialAuthEndpoint}/facebook`;
@@ -22,6 +43,7 @@ export const forgotPasswordURL = `${BASE_API_URL}/forgotpassword`;
 export const resetPasswordTokenURL = (token: string) =>
   `${BASE_API_URL}/resetpassword/${token}`;
 
-export const getAllRecipesURL = `${BASE_API_URL}${recipesURL}/all`;
+// RECIPE URLS
+export const getAllRecipesURL = `${recipesEndpoint}/all`;
 
-export const addRecipeURL = `${BASE_API_URL}${recipesURL}/add`;
+export const addRecipeURL = `${recipesEndpoint}/add`;

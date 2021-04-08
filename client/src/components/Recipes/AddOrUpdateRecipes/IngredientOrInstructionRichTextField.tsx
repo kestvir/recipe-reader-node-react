@@ -3,7 +3,7 @@ import { EditorState } from "draft-js";
 import { Editor } from "@nick4fake/react-draft-wysiwyg";
 import ErorrMessage from "../../UI/ErrorMessage";
 
-interface IngredientOrInstructionTextFieldProps {
+interface IngredientOrInstructionRichTextFieldProps {
   editorState: EditorState;
   setEditorState: React.Dispatch<React.SetStateAction<EditorState>>;
   label: string;
@@ -11,7 +11,7 @@ interface IngredientOrInstructionTextFieldProps {
   displayErrors: boolean;
 }
 
-const IngredientOrInstructionTextField: React.FC<IngredientOrInstructionTextFieldProps> = ({
+const IngredientOrInstructionRichTextField: React.FC<IngredientOrInstructionRichTextFieldProps> = ({
   editorState,
   setEditorState,
   label,
@@ -96,4 +96,4 @@ const IngredientOrInstructionTextField: React.FC<IngredientOrInstructionTextFiel
   );
 };
 
-export default IngredientOrInstructionTextField;
+export default IngredientOrInstructionRichTextField;

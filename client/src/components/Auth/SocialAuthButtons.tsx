@@ -4,7 +4,7 @@ import FacebookIcon from "../../assets/icons/FacebookIcon";
 import {
   socialAuthGoogleURL,
   socialAuthFacebookURL,
-} from "../../utils/backendUrls";
+} from "../../shared/constants";
 
 interface SocialAuthButtonsProps {
   isSignup: boolean;

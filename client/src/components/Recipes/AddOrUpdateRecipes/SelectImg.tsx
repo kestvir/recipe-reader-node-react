@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ImgFile } from "../../../utils/@types/types";
+import { ImgFile } from "../../../shared/types";
 import ErrorMessage from "../../UI/ErrorMessage";
 
 interface SelectImgProps {

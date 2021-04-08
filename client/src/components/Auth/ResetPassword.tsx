@@ -3,13 +3,10 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { resetPassword } from "../../redux/slices/resetPasswordSlice";
+import { resetPassword, resetReqState } from "../../redux/slices/authSlice";
 import Input from "../UI/Input";
-import { resetPasswordTokenURL } from "../../utils/backendUrls";
-import {
-  State,
-  MultipleAuthInputFieldFormErrors,
-} from "../../utils/@types/types";
+import { resetPasswordTokenURL } from "../../shared/constants";
+import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
 
 interface ResetPasswordProps {}
 
@@ -21,7 +18,7 @@ const initialFormState = { password: "", confirmPassword: "" };
 const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const userId = useSelector((state: State) => state.auth.id);
   const { isLoading, isSuccess, errors } = useSelector(
-    (state: State) => state.resetPassword
+    (state: State) => state.auth
   );
   const dispatch = useDispatch();
 
@@ -65,6 +62,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
         history.push("/");
       }, 1700);
     }
+
+    return () => {
+      dispatch(resetReqState());
+    };
   }, [isSuccess, errors]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,11 +80,11 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
 
   let passwordErrorMessage, confirmPasswordErrorMessage;
 
-  //   const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
-  //   if (errors.status === 422) {
-  //     passwordErrorMessage = authErrorMessages.passwordErrorMessage;
-  //     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
-  //   }
+  const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
+  if (errors.status === 422) {
+    passwordErrorMessage = authErrorMessages.passwordErrorMessage;
+    confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
+  }
 
   if (initialLoading)
     return (

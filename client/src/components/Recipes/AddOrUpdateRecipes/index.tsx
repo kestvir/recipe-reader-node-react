@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useHistory } from "react-router-dom";
 import { EditorState, convertToRaw } from "draft-js";
 import "@nick4fake/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import {
-  ImgFile,
-  State,
-  AddOrUpdateRecipeErrors,
-} from "../../../utils/@types/types";
+import { ImgFile, State, AddOrUpdateRecipeErrors } from "../../../shared/types";
 import Input from "../../UI/Input";
 import SelectImg from "./SelectImg";
-import IngredientOrInstructionTextField from "./IngredientOrInstructionTextField";
+import IngredientOrInstructionRichTextField from "./IngredientOrInstructionRichTextField";
 import SelectCategory from "./SelectCategory";
-import { addOrUpdateRecipe } from "../../../redux/slices/recipesSlice";
+import {
+  addOrUpdateRecipe,
+  resetReqState,
+} from "../../../redux/slices/recipesSlice";
 
 interface AddOrUpdateRecipeProps {}
 
@@ -25,10 +24,10 @@ const initialAddOrUpdateRecipeErrors = {
 };
 
 const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
-  const { isLoading, isSuccess, errors } = useSelector(
-    (state: State) => state.signup
+  const { isLoading, isSuccess, errors } = useAppSelector(
+    (state: State) => state.recipes
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const [title, setTitle] = useState("");
@@ -48,6 +47,9 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
     if (isSuccess || errors.status === 401) {
       history.push("/");
     }
+    return () => {
+      dispatch(resetReqState());
+    };
   }, [isSuccess, errors]);
 
   const getAndConvertEditorStateToStr = () => {
@@ -94,16 +96,16 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
     instructionsErrorMessage,
   } = initialAddOrUpdateRecipeErrors;
 
-  //   const addOrUpdateRecipeErrorMessages = errors.message as AddOrUpdateRecipeErrors;
-  //   if (errors.status === 422) {
-  //     titleErrorMessage = addOrUpdateRecipeErrorMessages.titleErrorMessage;
-  //     categoryErrorMessage = addOrUpdateRecipeErrorMessages.categoryErrorMessage;
-  //     imgErrorMessage = addOrUpdateRecipeErrorMessages.imgErrorMessage;
-  //     ingredientsErrorMessage =
-  //       addOrUpdateRecipeErrorMessages.ingredientsErrorMessage;
-  //     instructionsErrorMessage =
-  //       addOrUpdateRecipeErrorMessages.instructionsErrorMessage;
-  //   }
+  const addOrUpdateRecipeErrorMessages = errors.message as AddOrUpdateRecipeErrors;
+  if (errors.status === 422) {
+    titleErrorMessage = addOrUpdateRecipeErrorMessages.titleErrorMessage;
+    categoryErrorMessage = addOrUpdateRecipeErrorMessages.categoryErrorMessage;
+    imgErrorMessage = addOrUpdateRecipeErrorMessages.imgErrorMessage;
+    ingredientsErrorMessage =
+      addOrUpdateRecipeErrorMessages.ingredientsErrorMessage;
+    instructionsErrorMessage =
+      addOrUpdateRecipeErrorMessages.instructionsErrorMessage;
+  }
 
   return (
     <section className="section" id="addRecipeSection">
@@ -121,7 +123,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                 displayErrors={!isLoading}
               />
 
-              <IngredientOrInstructionTextField
+              <IngredientOrInstructionRichTextField
                 editorState={ingredients}
                 setEditorState={setIngredients}
                 label="Ingredients"
@@ -129,7 +131,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                 displayErrors={!isLoading}
               />
 
-              <IngredientOrInstructionTextField
+              <IngredientOrInstructionRichTextField
                 editorState={instructions}
                 setEditorState={setInstructions}
                 label="Instructions"

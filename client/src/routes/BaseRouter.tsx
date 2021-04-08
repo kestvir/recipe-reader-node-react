@@ -6,9 +6,9 @@ import Signup from "../components/Auth/Signup";
 import Login from "../components/Auth/Login";
 import ForgotPassword from "../components/Auth/ForgotPassword";
 import ResetPassword from "../components/Auth/ResetPassword";
-import AddRecipe from "../components/Recipes/AddOrUpdateRecipe";
+// import AddRecipe from "./components/Recipes/AddOrUpdateRecipe";
 import ProtectedRoute from "./ProtectedRoute";
-import { State } from "../utils/@types/types";
+import { State } from "../shared/types";
 
 interface routesProps {}
 
@@ -22,11 +22,11 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
       <Route path="/login" component={Login} />
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/resetpassword/:token" component={ResetPassword} />
-      <ProtectedRoute
+      {/* <ProtectedRoute
         path="/recipes/add"
         component={AddRecipe}
         isAuth={!!userId}
-      />
+      /> */}
     </Switch>
   );
 };

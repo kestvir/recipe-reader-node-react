@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import Input from "../UI/Input";
-import { State } from "../../utils/@types/types";
-import { forgotPassword } from "../../redux/slices/forgotPasswordSlice";
+import { State } from "../../shared/types";
+import { forgotPassword, resetReqState } from "../../redux/slices/authSlice";
 
 interface ForgotPasswordProps {}
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
-  const userId = useSelector((state: State) => state.auth.id);
-  const { isLoading, isSuccess, errors } = useSelector(
-    (state: State) => state.forgotPassword
+  const userId = useAppSelector((state: State) => state.auth.id);
+  const { isLoading, isSuccess, errors } = useAppSelector(
+    (state: State) => state.auth
   );
 
-  console.log(isLoading);
-
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const history = useHistory();
 
@@ -28,6 +26,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
         history.push("/");
       }, 1500);
     }
+    return () => {
+      dispatch(resetReqState());
+    };
   }, [isSuccess]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

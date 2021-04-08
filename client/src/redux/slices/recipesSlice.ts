@@ -1,14 +1,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { RecipeReqError, Recipe, RecipesState } from "../../shared/types";
 import {
-  Recipe,
-  RecipesState,
-  CustomRecipeRequestError,
-} from "../../utils/@types/types";
-import { getAllRecipesURL, addRecipeURL } from "../../utils/backendUrls";
-import { initialBasicAsyncState } from "../../utils/constants";
-import { setupMultipleRecipeErrors } from "../../utils/functions";
-import { isThunk, thunkHandler } from "../../utils/reduxHelper";
+  initialReqState,
+  getAllRecipesURL,
+  addRecipeURL,
+} from "../../shared/constants";
+import { setupMultipleRecipeErrors } from "../../utils/errorUtils";
+import { isThunk, thunkHandler } from "../asyncRequestStatusReducer";
 
 export const initialRecipesState: RecipesState = {
   recipes: [],
@@ -19,12 +18,21 @@ export const initialRecipesState: RecipesState = {
     ingredients: "",
     instructions: "",
   },
+  ...initialReqState,
+};
+
+const initialAddOrUpdateRecipeErrors = {
+  titleErrorMessage: "",
+  imgErrorMessage: "",
+  categoryErrorMessage: "",
+  ingredientsErrorMessage: "",
+  instructionsErrorMessage: "",
 };
 
 export const getAllRecipes = createAsyncThunk<
   void,
   any,
-  { rejectValue: CustomRecipeRequestError }
+  { rejectValue: RecipeReqError }
 >("recipes/getAllRecipes", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getAllRecipesURL);
@@ -39,7 +47,7 @@ export const getAllRecipes = createAsyncThunk<
 export const addOrUpdateRecipe = createAsyncThunk<
   void,
   Recipe,
-  { rejectValue: CustomRecipeRequestError }
+  { rejectValue: RecipeReqError }
 >(
   "recipes/addOrUpdateRecipe",
   async (recipeData, { dispatch, rejectWithValue }) => {
@@ -50,7 +58,10 @@ export const addOrUpdateRecipe = createAsyncThunk<
       console.log(err);
       const { status, statusText, data } = err.response;
       if (status === 422) {
-        const formattedErrors = setupMultipleRecipeErrors(data.data);
+        const formattedErrors = setupMultipleRecipeErrors(
+          data.data,
+          initialAddOrUpdateRecipeErrors
+        );
         return rejectWithValue({ status, message: formattedErrors });
       }
       return rejectWithValue({ status, message: statusText });
@@ -60,13 +71,19 @@ export const addOrUpdateRecipe = createAsyncThunk<
 
 const recipesSlice = createSlice({
   name: "recipes",
-  initialState: { ...initialRecipesState, ...initialBasicAsyncState },
+  initialState: { ...initialRecipesState },
   reducers: {
     setRecipes: (state, { payload }: PayloadAction<{ recipes: Recipe[] }>) => {
       state.recipes = payload.recipes;
     },
     addRecipe: (state, { payload }: PayloadAction<{ recipe: Recipe }>) => {
       state.recipes.push(payload.recipe);
+    },
+    resetReqState: (state) => {
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.errors.status = null;
+      state.errors.message = "";
     },
   },
   extraReducers: (builder) =>
@@ -77,6 +94,6 @@ const recipesSlice = createSlice({
       .addMatcher(isThunk(getAllRecipes, addOrUpdateRecipe), thunkHandler),
 });
 
-export const { setRecipes, addRecipe } = recipesSlice.actions;
+export const { setRecipes, addRecipe, resetReqState } = recipesSlice.actions;
 
 export default recipesSlice.reducer;

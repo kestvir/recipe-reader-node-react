@@ -4,7 +4,8 @@ import {
   Draft,
   SerializedError,
 } from "@reduxjs/toolkit";
-import { BasicAsyncState, CustomRecipeRequestError } from "./@types/types";
+import { ReqStatus, AppErrors } from "../shared/types";
+import { getSerializedErrorStatus } from "../utils/errorUtils";
 
 type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
 
@@ -12,22 +13,16 @@ type PendingAction = ReturnType<GenericAsyncThunk["pending"]>;
 type RejectedAction = ReturnType<GenericAsyncThunk["rejected"]>;
 type FulfilledAction = ReturnType<GenericAsyncThunk["fulfilled"]>;
 
-function isPendingAction(action: AnyAction): action is PendingAction {
+const isPendingAction = (action: AnyAction): action is PendingAction => {
   return action.type.endsWith("/pending");
-}
+};
 
-function isRejectedAction(action: AnyAction): action is RejectedAction {
+const isRejectedAction = (action: AnyAction): action is RejectedAction => {
   return action.type.endsWith("/rejected");
-}
+};
 
-function isFulfilledAction(action: AnyAction): action is FulfilledAction {
+const isFulfilledAction = (action: AnyAction): action is FulfilledAction => {
   return action.type.endsWith("/fulfilled");
-}
-
-const getSerializedErrorStatus = (errorMessage: string | undefined) => {
-  if (!errorMessage) return null;
-  const errorMessageArr = errorMessage.split(" ");
-  return parseInt(errorMessageArr[errorMessageArr.length - 1]);
 };
 
 export const isThunk = <T extends AsyncThunk<any, any, any>[]>(
@@ -35,7 +30,7 @@ export const isThunk = <T extends AsyncThunk<any, any, any>[]>(
 ) => (action: AnyAction) =>
   thunks.some((thunk) => action.type.startsWith(thunk.typePrefix));
 
-export const thunkHandler = <S extends BasicAsyncState>(
+export const thunkHandler = <S extends ReqStatus>(
   state: Draft<S>,
   action: AnyAction
 ): void => {
@@ -49,7 +44,7 @@ export const thunkHandler = <S extends BasicAsyncState>(
   } else if (isRejectedAction(action)) {
     state.isLoading = false;
     if (action.payload) {
-      state.errors = action.payload as CustomRecipeRequestError;
+      state.errors = action.payload as AppErrors;
     } else if (action.error) {
       const serializedError = action.error as SerializedError;
       state.errors.status = getSerializedErrorStatus(serializedError.message);
