@@ -1,11 +1,10 @@
 import mongoose, { Schema } from "mongoose";
 import { Recipe } from "../utils/types";
 
-export const recipe: Schema = new mongoose.Schema(
+export const recipe: Schema = new Schema(
   {
     title: {
       required: true,
-      unique: true,
       type: String,
     },
     img: {

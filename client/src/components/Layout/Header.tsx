@@ -54,7 +54,9 @@ const Header: React.FC<HeaderProps> = ({}) => {
               <div className="navbar-item has-dropdown is-hoverable">
                 <a className="navbar-link">Recipes</a>
                 <div className="navbar-dropdown">
-                  <a className="navbar-item">Manage recipes</a>
+                  <Link to="/recipes" className="navbar-item">
+                    Manage recipes
+                  </Link>
                   <Link to="/recipes/add" className="navbar-item">
                     Add a recipe
                   </Link>

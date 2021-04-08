@@ -1,8 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { MongoDBUser } from "../utils/types";
-import { recipe as RecipeSchema } from "./recipe";
 
-const user: Schema = new mongoose.Schema({
+const user: Schema = new Schema({
   googleId: {
     required: false,
     type: String,
@@ -27,10 +26,13 @@ const user: Schema = new mongoose.Schema({
     required: false,
     type: Date,
   },
-  recipes: {
-    required: false,
-    type: [RecipeSchema],
-  },
+  recipes: [
+    {
+      required: false,
+      type: Schema.Types.ObjectId,
+      ref: "Recipe",
+    },
+  ],
 });
 
 export default mongoose.model<MongoDBUser>("User", user);

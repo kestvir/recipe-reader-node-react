@@ -31,11 +31,12 @@ const initialAddOrUpdateRecipeErrors = {
 
 export const getAllRecipes = createAsyncThunk<
   void,
-  any,
+  undefined,
   { rejectValue: RecipeReqError }
 >("recipes/getAllRecipes", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getAllRecipesURL);
+    console.log(res);
     dispatch(setRecipes({ recipes: res.data }));
   } catch (err) {
     console.log(err);

@@ -1,3 +1,5 @@
+import { User } from "../shared/types";
+
 export const removeUserFromLocalStorage = () => {
   localStorage.removeItem("recipeReaderUser");
 };
@@ -15,8 +17,20 @@ export const saveUserToLocalStorage = (
 };
 
 export const getUserFromLocalStorage = () => {
+  const initialUserObj: User = {
+    id: "",
+    email: "",
+    facebookId: "",
+    googleId: "",
+  };
+  let parsedUser: User | null = null;
   const userStr = localStorage.getItem("recipeReaderUser");
   if (typeof userStr === "string") {
-    return JSON.parse(userStr);
-  } else return { id: "", email: "", facebookId: "", googleId: "" };
+    parsedUser = JSON.parse(userStr);
+  }
+  if (parsedUser !== null && parsedUser.id) {
+    return parsedUser;
+  } else {
+    return initialUserObj;
+  }
 };

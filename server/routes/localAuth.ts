@@ -12,7 +12,7 @@ import {
   forgotPasswordValidator,
   resetPasswordValidator,
 } from "../validators/auth";
-import { checkValidationErrors } from "../utils/functions";
+import { checkValidationErrors } from "../utils/errorUtils";
 
 const router = express.Router();
 

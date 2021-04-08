@@ -7,6 +7,7 @@ import { resetPassword, resetReqState } from "../../redux/slices/authSlice";
 import Input from "../UI/Input";
 import { resetPasswordTokenURL } from "../../shared/constants";
 import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
+import ProgressBar from "../UI/Progressbar";
 
 interface ResetPasswordProps {}
 
@@ -86,16 +87,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;
   }
 
-  if (initialLoading)
-    return (
-      <div style={{ minHeight: "calc(100vh - 88px - 56px)" }}>
-        <progress
-          className="progress is-small is-primary has-text-centered"
-          max="100"
-          style={{ width: "100%" }}
-        />
-      </div>
-    );
+  if (initialLoading) return <ProgressBar />;
 
   if (!isTokenValid) {
     return (

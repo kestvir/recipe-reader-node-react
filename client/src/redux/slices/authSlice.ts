@@ -18,6 +18,13 @@ import {
   saveUserToLocalStorage,
 } from "../../utils/userUtils";
 
+const initialUserState: User = getUserFromLocalStorage();
+
+const initialAuthState: AuthState = {
+  ...initialUserState,
+  ...initialReqState,
+};
+
 interface UserSignupData {
   email: string;
   password: string;
@@ -48,18 +55,11 @@ const initialResetPasswordErrors = {
   confirmPasswordErrorMessage: "",
 };
 
-const initialUserState: User = getUserFromLocalStorage();
-
-const initialAuthState: AuthState = {
-  ...initialUserState,
-  ...initialReqState,
-};
-
 export const resetPassword = createAsyncThunk<
   void,
   ResetPasswordData,
   { rejectValue: AuthReqError }
->("AUTH/resetPassword", async (resetPasswordData, { rejectWithValue }) => {
+>("auth/resetPassword", async (resetPasswordData, { rejectWithValue }) => {
   const { password, confirmPassword, token } = resetPasswordData;
   try {
     await axios.post(resetPasswordTokenURL(token), {
@@ -175,11 +175,10 @@ export const getUser = createAsyncThunk<
 >("auth/getUser", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getUserURL);
-    if (res.status === 200) {
+    if (res.data) {
       dispatch(setUser({ userObj: res.data }));
     } else {
       dispatch(clearUser());
-      removeUserFromLocalStorage();
     }
   } catch (err) {
     console.error(err);
@@ -198,7 +197,6 @@ const authSlice = createSlice({
       state.email = email;
       if (googleId) state.googleId = googleId;
       else if (facebookId) state.facebookId = facebookId;
-
       saveUserToLocalStorage(id, email, googleId, facebookId);
     },
     clearUser: (state) => {
@@ -206,7 +204,7 @@ const authSlice = createSlice({
       state.email = "";
       state.googleId = "";
       state.facebookId = "";
-      localStorage.removeItem("recipeReaderUser");
+      removeUserFromLocalStorage();
     },
     resetReqState: (state) => {
       state.isLoading = false;
@@ -217,11 +215,11 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(getUser.pending, (state, action) => {
+      .addCase(signup.pending, (state, action) => {
         state.isLoading = true;
       })
       .addMatcher(
-        isThunk(getUser, signup, login, logout, forgotPassword, resetPassword),
+        isThunk(signup, login, forgotPassword, resetPassword),
         thunkHandler
       ),
 });
