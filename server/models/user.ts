@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { MongoDBUser } from "../utils/types";
+import { MongoDBUser } from "../shared/types";
 
 const user: Schema = new Schema({
   googleId: {

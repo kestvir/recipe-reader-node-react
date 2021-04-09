@@ -1,5 +1,5 @@
 import { Result, ValidationError } from "express-validator";
-import { CustomError } from "./types";
+import { CustomError } from "../shared/types";
 
 export const checkValidationErrors = (errors: Result<ValidationError>) => {
   if (!errors.isEmpty()) {

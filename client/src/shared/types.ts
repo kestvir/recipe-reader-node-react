@@ -23,18 +23,41 @@ export interface User {
   googleId: string;
 }
 
-export interface Recipe {
+export interface RecipeLocalData {
   title: string;
   category: string;
-  img: string | ArrayBuffer | null | Blob;
+  img: ImgFile;
   ingredients: string;
   instructions: string;
+}
+
+export interface RecipeApiData {
+  _id: string;
+  __v: number;
+  createdAt: string;
+  updatedAt: string;
+  title: string;
+  category: string;
+  img: ImgFile;
+  ingredients: string;
+  instructions: string;
+}
+
+export interface InitialActiveRecipe {
   _id?: string;
+  __v?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  title: string;
+  category: string;
+  img: ImgFile;
+  ingredients: string;
+  instructions: string;
 }
 
 export interface RecipesState extends ReqStatus {
-  recipes: Recipe[];
-  activeRecipe: Recipe;
+  recipes: RecipeApiData[];
+  activeRecipe: RecipeApiData;
 }
 
 export interface AuthState extends ReqStatus, User {}

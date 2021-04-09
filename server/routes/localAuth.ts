@@ -5,7 +5,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import async from "async";
 import nodemailer from "nodemailer";
-import { CustomError, MongoDBUser } from "../utils/types";
+import { CustomError, MongoDBUser } from "../shared/types";
 import { validationResult } from "express-validator";
 import {
   signupValidator,

@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user";
 import { PassportStatic } from "passport";
-import { MongoDBUser, User as IUser } from "../utils/types";
+import { MongoDBUser, User as IUser } from "../shared/types";
 
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;

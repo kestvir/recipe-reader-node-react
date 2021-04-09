@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { Recipe } from "../utils/types";
+import { Recipe } from "../shared/types";
 
 export const recipe: Schema = new Schema(
   {
@@ -8,8 +8,8 @@ export const recipe: Schema = new Schema(
       type: String,
     },
     img: {
-      required: true,
-      type: String,
+      file: { required: true, type: String },
+      name: { required: true, type: String },
     },
     category: {
       required: true,

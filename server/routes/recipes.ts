@@ -4,7 +4,7 @@ import Recipe, { recipe } from "../models/Recipe";
 import { validationResult } from "express-validator";
 import * as recipeValidators from "../validators/recipes";
 import { checkValidationErrors } from "../utils/errorUtils";
-import { User as IUser, Recipe as IRecipe } from "../utils/types";
+import { User as IUser, Recipe as IRecipe } from "../shared/types";
 
 const router = express.Router();
 
@@ -43,6 +43,36 @@ router.post(
         user.recipes.push(recipe);
         await user.save();
         res.send(recipeDataObj);
+      } catch (err) {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      }
+    })();
+  }
+);
+
+router.put(
+  "/update/:id",
+  recipeValidators.updateRecipeValidator,
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    checkValidationErrors(errors);
+
+    const recipeId = req.params.id;
+    (async () => {
+      try {
+        await Recipe.findByIdAndUpdate(
+          recipeId,
+          { $set: req.body },
+          { new: true },
+          (err, recipe) => {
+            if (!err) {
+              res.send(recipe);
+            }
+          }
+        );
       } catch (err) {
         if (!err.statusCode) {
           err.statusCode = 500;

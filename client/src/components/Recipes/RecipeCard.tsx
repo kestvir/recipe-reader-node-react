@@ -2,17 +2,17 @@ import React from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { setupActiveRecipe } from "../../redux/slices/recipesSlice";
 import { Link } from "react-router-dom";
-import { Recipe } from "../../shared/types";
+import { RecipeApiData } from "../../shared/types";
 
 interface RecipeCardProps {
-  recipe: Recipe;
+  recipe: RecipeApiData;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const dispatch = useAppDispatch();
   const { title, img, category, _id } = recipe;
   const id = _id as string;
-  const imgSrc = img as string;
+  const imgSrc = img.file as string;
   return (
     <div className="card">
       <div className="card-image">

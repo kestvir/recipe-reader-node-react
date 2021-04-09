@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { useHistory } from "react-router-dom";
-import { EditorState, convertToRaw } from "draft-js";
+import { useHistory, useParams } from "react-router-dom";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "@nick4fake/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ImgFile, State, AddOrUpdateRecipeErrors } from "../../../shared/types";
 import Input from "../../UI/Input";
@@ -9,11 +9,16 @@ import SelectImg from "./SelectImg";
 import IngredientOrInstructionRichTextField from "./IngredientOrInstructionRichTextField";
 import SelectCategory from "./SelectCategory";
 import {
-  addOrUpdateRecipe,
+  addRecipe,
+  updateRecipe,
   resetReqState,
 } from "../../../redux/slices/recipesSlice";
 
 interface AddOrUpdateRecipeProps {}
+
+interface Params {
+  id: string;
+}
 
 const initialAddOrUpdateRecipeErrors = {
   titleErrorMessage: "",
@@ -24,12 +29,13 @@ const initialAddOrUpdateRecipeErrors = {
 };
 
 const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
-  const { isLoading, isSuccess, errors } = useAppSelector(
+  const { isLoading, isSuccess, errors, activeRecipe } = useAppSelector(
     (state: State) => state.recipes
   );
 
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const params: Params = useParams();
 
   const [title, setTitle] = useState("");
   const [selectedImg, setSelectedImg] = useState<ImgFile>({
@@ -45,6 +51,17 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   );
 
   useEffect(() => {
+    const { title, category, img, ingredients, instructions } = activeRecipe;
+    if (params.id) {
+      setTitle(title);
+      setCategory(category);
+      setSelectedImg({ name: img.name, file: img.file });
+      setIngredients(convertRichTextDataFromStr(ingredients));
+      setInstructions(convertRichTextDataFromStr(instructions));
+    }
+  }, []);
+
+  useEffect(() => {
     if (isSuccess || errors.status === 401) {
       history.push("/");
     }
@@ -55,6 +72,10 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
       dispatch(resetReqState());
     };
   }, []);
+
+  const convertRichTextDataFromStr = (str: string) => {
+    return EditorState.createWithContent(convertFromRaw(JSON.parse(str)));
+  };
 
   const getAndConvertEditorStateToStr = () => {
     let ingredientsStr;
@@ -84,12 +105,16 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
     const { ingredientsStr, instructionsStr } = getAndConvertEditorStateToStr();
     const recipeObj = {
       title,
-      img: selectedImg.file,
+      img: selectedImg,
       category,
       ingredients: ingredientsStr,
       instructions: instructionsStr,
     };
-    dispatch(addOrUpdateRecipe(recipeObj));
+    if (params.id) {
+      dispatch(updateRecipe({ recipe: recipeObj, id: params.id }));
+    } else {
+      dispatch(addRecipe(recipeObj));
+    }
   };
 
   let {

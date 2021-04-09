@@ -1,22 +1,29 @@
-import { Recipe } from "../shared/types";
+import {
+  RecipeApiData,
+  RecipeLocalData,
+  InitialActiveRecipe,
+} from "../shared/types";
 
 export const removeActiveRecipeFromLocalStorage = () => {
   localStorage.removeItem("activeRecipe");
 };
 
-export const saveActiveRecipeToLocalStorage = (recipe: Recipe) => {
+export const saveActiveRecipeToLocalStorage = (recipe: RecipeApiData) => {
   localStorage.setItem("activeRecipe", JSON.stringify(recipe));
 };
 
 export const getActiveRecipeFromLocalStorage = () => {
-  const initialActiveRecipe: Recipe = {
+  const initialActiveRecipe: RecipeLocalData = {
     title: "",
     category: "entree",
-    img: "",
+    img: {
+      file: "",
+      name: "Select image...",
+    },
     ingredients: "",
     instructions: "",
   };
-  let parsedActiveRecipe: Recipe | null = null;
+  let parsedActiveRecipe: InitialActiveRecipe | RecipeApiData | null = null;
   const activeRecipeStr = localStorage.getItem("activeRecipe");
   if (typeof activeRecipeStr === "string") {
     parsedActiveRecipe = JSON.parse(activeRecipeStr);

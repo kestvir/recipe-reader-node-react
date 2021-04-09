@@ -8,7 +8,7 @@ import localAuth from "./routes/localAuth";
 import socialAuth from "./routes/socialAuth";
 import recipes from "./routes/recipes";
 import passportConfig from "./config/passport";
-import { CustomError } from "./utils/types";
+import { CustomError } from "./shared/types";
 import { ensureAuth } from "./middleware/auth";
 
 dotenv.config();

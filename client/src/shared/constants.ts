@@ -48,5 +48,8 @@ export const getAllRecipesURL = `${recipesEndpoint}/all`;
 
 export const addRecipeURL = `${recipesEndpoint}/add`;
 
+export const updateRecipeURL = (id: string) =>
+  `${recipesEndpoint}/update/${id}`;
+
 export const deleteRecipeURL = (id: string) =>
   `${recipesEndpoint}/delete/${id}`;

@@ -1,6 +1,4 @@
-import { body, check } from "express-validator";
-import User from "../models/user";
-import Recipe from "../models/recipe";
+import { body } from "express-validator";
 
 export const addRecipeValidator = [
   body("title").trim().notEmpty().withMessage("Title can not be empty."),
@@ -19,3 +17,5 @@ export const addRecipeValidator = [
     return true;
   }),
 ];
+
+export const updateRecipeValidator = [...addRecipeValidator];

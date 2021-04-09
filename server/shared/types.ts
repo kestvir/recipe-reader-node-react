@@ -29,8 +29,13 @@ export type DishCategory = "entree" | "main" | "desert";
 
 export interface Recipe extends Document {
   title: string;
-  img: string;
+  img: ImgFile;
   category: DishCategory;
   ingredients: string;
   instructions: string;
+}
+
+export interface ImgFile {
+  name: string;
+  file: string | ArrayBuffer | null | Blob;
 }

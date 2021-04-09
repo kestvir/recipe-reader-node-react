@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import React, { useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { useAppSelector } from "../../redux/hooks";
 import { State } from "../../shared/types";
 import draftToHtml from "draftjs-to-html";
-import { resetActiveRecipe } from "../../redux/slices/recipesSlice";
 import DeleteRecipeModal from "./DeleteRecipeModal";
 
 interface RecipeDetailsProps {}
 
+interface Params {
+  id: string;
+}
+
 const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
   const { activeRecipe } = useAppSelector((state: State) => state.recipes);
-  const dispatch = useAppDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const history = useHistory();
+  const params: Params = useParams();
+
   const { title, img, category, ingredients, instructions } = activeRecipe;
 
-  const imgSrc = img as string;
+  const imgSrc = img.file as string;
 
   const convertStrToHTML = (str: string) => {
     return draftToHtml(JSON.parse(str));
@@ -28,11 +34,9 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
     setIsModalOpen((prevState) => !prevState);
   };
 
-  useEffect(() => {
-    return () => {
-      dispatch(resetActiveRecipe());
-    };
-  }, []);
+  const goToUpdateRecipe = () => {
+    history.push(`/recipe/update/${params.id}`);
+  };
 
   return (
     <section className="section has-text-centered">
@@ -46,7 +50,12 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
           style={{ maxWidth: "100%", width: "700px" }}
         />
         <div className="is-flex is-flex-direction-row is-justify-content-center block">
-          <button className="button is-primary is-light mr-2">Update</button>
+          <button
+            className="button is-primary is-light mr-2"
+            onClick={goToUpdateRecipe}
+          >
+            Update
+          </button>
           <button className="button is-danger" onClick={toggleModal}>
             Delete
           </button>

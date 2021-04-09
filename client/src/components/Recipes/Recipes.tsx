@@ -1,27 +1,31 @@
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { State } from "../../shared/types";
-import { getAllRecipes, resetReqState } from "../../redux/slices/recipesSlice";
+import { getRecipes, resetReqState } from "../../redux/slices/recipesSlice";
 import RecipeCard from "./RecipeCard";
 import Progressbar from "../UI/Progressbar";
 
 interface PostsProps {}
 
 const Recipes: React.FC<PostsProps> = ({}) => {
-  const { isLoading, errors, recipes } = useAppSelector(
+  const { isSuccess, isLoading, errors, recipes } = useAppSelector(
     (state: State) => state.recipes
   );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getAllRecipes());
-  }, []);
+    dispatch(getRecipes());
 
-  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
   }, []);
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(resetReqState());
+    }
+  }, [isSuccess]);
 
   if (isLoading) return <Progressbar />;
 
