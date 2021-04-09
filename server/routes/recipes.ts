@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import User from "../models/user";
-import Recipe from "../models/Recipe";
+import Recipe, { recipe } from "../models/Recipe";
 import { validationResult } from "express-validator";
 import * as recipeValidators from "../validators/recipes";
 import { checkValidationErrors } from "../utils/errorUtils";
@@ -9,8 +9,8 @@ import { User as IUser, Recipe as IRecipe } from "../utils/types";
 const router = express.Router();
 
 router.get("/all", async (req, res, next) => {
+  const reqUser = req.user as IUser;
   try {
-    const reqUser = req.user as IUser;
     const user = await User.findById(reqUser.id);
     user.populate("recipes").execPopulate((err, result) => {
       if (err) next(err);
@@ -26,12 +26,6 @@ router.get("/all", async (req, res, next) => {
     next(err);
   }
 });
-
-// router.get("/entrees", (req, res) => {});
-
-// router.get("/mains", (req, res) => {});
-
-// router.get("/deserts", (req, res) => {});
 
 router.post(
   "/add",
@@ -58,5 +52,29 @@ router.post(
     })();
   }
 );
+
+router.delete("/delete/:id", async (req, res, next) => {
+  const recipeId = req.params.id;
+  const reqUser = req.user as IUser;
+
+  try {
+    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).exec();
+    await User.findOneAndUpdate(
+      { _id: reqUser.id },
+      { $pull: { recipes: deletedRecipe.id } },
+      { new: true },
+      (err, updatedUser) => {
+        if (!err) {
+          res.send(deletedRecipe.id);
+        }
+      }
+    );
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+});
 
 export default router;

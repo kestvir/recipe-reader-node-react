@@ -26,10 +26,13 @@ const Login: React.FC<LoginProps> = ({}) => {
     if (isSuccess) {
       history.push("/");
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, [isSuccess]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });

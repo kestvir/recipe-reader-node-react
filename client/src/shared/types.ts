@@ -29,6 +29,7 @@ export interface Recipe {
   img: string | ArrayBuffer | null | Blob;
   ingredients: string;
   instructions: string;
+  _id?: string;
 }
 
 export interface RecipesState extends ReqStatus {

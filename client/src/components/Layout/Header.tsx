@@ -4,6 +4,8 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { State } from "../../shared/types";
 import { logout as logoutAction } from "../../redux/slices/authSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPizzaSlice } from "@fortawesome/free-solid-svg-icons";
 
 interface HeaderProps {}
 
@@ -22,13 +24,8 @@ const Header: React.FC<HeaderProps> = ({}) => {
       <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <Link className="navbar-item" to="/">
-            <img
-              src="https://bulma.io/images/bulma-logo.png"
-              width="112"
-              height="28"
-            />
+            <FontAwesomeIcon icon={faPizzaSlice} />
           </Link>
-
           <a
             role="button"
             className="navbar-burger"

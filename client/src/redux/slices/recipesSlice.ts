@@ -5,19 +5,19 @@ import {
   initialReqState,
   getAllRecipesURL,
   addRecipeURL,
+  deleteRecipeURL,
 } from "../../shared/constants";
 import { setupMultipleRecipeErrors } from "../../utils/errorUtils";
 import { isThunk, thunkHandler } from "../asyncRequestStatusReducer";
+import {
+  getActiveRecipeFromLocalStorage,
+  removeActiveRecipeFromLocalStorage,
+  saveActiveRecipeToLocalStorage,
+} from "../../utils/recipesUtils";
 
 export const initialRecipesState: RecipesState = {
   recipes: [],
-  activeRecipe: {
-    title: "",
-    category: "entree",
-    img: "",
-    ingredients: "",
-    instructions: "",
-  },
+  activeRecipe: getActiveRecipeFromLocalStorage(),
   ...initialReqState,
 };
 
@@ -36,7 +36,6 @@ export const getAllRecipes = createAsyncThunk<
 >("recipes/getAllRecipes", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getAllRecipesURL);
-    console.log(res);
     dispatch(setRecipes({ recipes: res.data }));
   } catch (err) {
     console.log(err);
@@ -70,6 +69,22 @@ export const addOrUpdateRecipe = createAsyncThunk<
   }
 );
 
+export const deleteRecipe = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: RecipeReqError }
+>("recipes/deleteRecipe", async (recipeId, { dispatch, rejectWithValue }) => {
+  try {
+    const res = await axios.delete(deleteRecipeURL(recipeId));
+    console.log(res.data);
+    dispatch(removeRecipe({ id: res.data }));
+  } catch (err) {
+    console.log(err);
+    const { status, statusText } = err.response;
+    return rejectWithValue({ status, message: statusText });
+  }
+});
+
 const recipesSlice = createSlice({
   name: "recipes",
   initialState: { ...initialRecipesState },
@@ -79,6 +94,22 @@ const recipesSlice = createSlice({
     },
     addRecipe: (state, { payload }: PayloadAction<{ recipe: Recipe }>) => {
       state.recipes.push(payload.recipe);
+    },
+    removeRecipe: (state, { payload }: PayloadAction<{ id: string }>) => {
+      state.recipes = state.recipes.filter((recipe) => {
+        if (recipe._id === payload.id) return recipe;
+      });
+    },
+    setupActiveRecipe: (
+      state,
+      { payload }: PayloadAction<{ recipeToUpdate: Recipe }>
+    ) => {
+      state.activeRecipe = payload.recipeToUpdate;
+      saveActiveRecipeToLocalStorage(payload.recipeToUpdate);
+    },
+    resetActiveRecipe: (state) => {
+      state.activeRecipe = initialRecipesState.activeRecipe;
+      removeActiveRecipeFromLocalStorage();
     },
     resetReqState: (state) => {
       state.isLoading = false;
@@ -92,9 +123,19 @@ const recipesSlice = createSlice({
       .addCase(getAllRecipes.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addMatcher(isThunk(getAllRecipes, addOrUpdateRecipe), thunkHandler),
+      .addMatcher(
+        isThunk(getAllRecipes, addOrUpdateRecipe, deleteRecipe),
+        thunkHandler
+      ),
 });
 
-export const { setRecipes, addRecipe, resetReqState } = recipesSlice.actions;
+export const {
+  setRecipes,
+  addRecipe,
+  removeRecipe,
+  resetReqState,
+  resetActiveRecipe,
+  setupActiveRecipe,
+} = recipesSlice.actions;
 
 export default recipesSlice.reducer;

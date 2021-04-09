@@ -27,6 +27,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   const { isLoading, isSuccess, errors } = useAppSelector(
     (state: State) => state.recipes
   );
+
   const dispatch = useAppDispatch();
   const history = useHistory();
 
@@ -47,10 +48,13 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
     if (isSuccess || errors.status === 401) {
       history.push("/");
     }
+  }, [isSuccess, errors]);
+
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, [isSuccess, errors]);
+  }, []);
 
   const getAndConvertEditorStateToStr = () => {
     let ingredientsStr;

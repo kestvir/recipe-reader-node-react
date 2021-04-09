@@ -13,4 +13,18 @@ section {
     align-items: center;
 }
 
+.navbar {
+    svg {
+        height: 28px;
+        width: 28px !important;
+        color: $primary;
+        &:hover {
+            color: $primary-hover;
+        }
+        &:active {
+            color: $primary-active;
+        }
+    }
+}
+
 @import "../../node_modules/bulma/bulma.sass";

@@ -10,6 +10,7 @@ import AddRecipe from "../components/Recipes/AddOrUpdateRecipes";
 import ProtectedRoute from "./ProtectedRoute";
 import { State } from "../shared/types";
 import Recipes from "../components/Recipes/Recipes";
+import RecipeDetails from "../components/Recipes/RecipeDetails";
 
 interface routesProps {}
 
@@ -29,6 +30,11 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
         isAuth={!!userId}
       />
       <ProtectedRoute path="/recipes" component={Recipes} isAuth={!!userId} />
+      <ProtectedRoute
+        path="/recipe/:id"
+        component={RecipeDetails}
+        isAuth={!!userId}
+      />
     </Switch>
   );
 };

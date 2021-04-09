@@ -63,11 +63,13 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
         history.push("/");
       }, 1700);
     }
+  }, [isSuccess, errors]);
 
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, [isSuccess, errors]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });

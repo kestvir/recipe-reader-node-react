@@ -47,3 +47,6 @@ export const resetPasswordTokenURL = (token: string) =>
 export const getAllRecipesURL = `${recipesEndpoint}/all`;
 
 export const addRecipeURL = `${recipesEndpoint}/add`;
+
+export const deleteRecipeURL = (id: string) =>
+  `${recipesEndpoint}/delete/${id}`;

@@ -26,10 +26,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
         history.push("/");
       }, 1500);
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, [isSuccess]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

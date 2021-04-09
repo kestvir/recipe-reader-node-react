@@ -15,7 +15,9 @@ const Recipes: React.FC<PostsProps> = ({}) => {
 
   useEffect(() => {
     dispatch(getAllRecipes());
+  }, []);
 
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
@@ -26,11 +28,13 @@ const Recipes: React.FC<PostsProps> = ({}) => {
   return (
     <section className="section">
       <div className="container">
-        <div className="columns">
+        <div className="columns is-multiline is-justify-content-center	">
           {recipes.map((recipe, index) => {
-            <div className="column" key={index}>
-              <RecipeCard />
-            </div>;
+            return (
+              <div className="column is-one-quarter" key={index}>
+                <RecipeCard recipe={recipe} />
+              </div>
+            );
           })}
         </div>
       </div>
