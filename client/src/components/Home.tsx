@@ -8,12 +8,19 @@ const Home: React.FC = ({}) => {
   const userId = useAppSelector((state: State) => state.auth.id);
   return (
     <section className="hero is-small">
-      <div className="hero-body is-flex is-flex-direction-column is-justify-content-space-between is-align-content-space-between has-text-centered pb-0">
-        <div className="is-flex is-flex-direction-column has-text-centered">
-          <p className="title is-size-1 has-text-weight-bold">
+      <div className="hero-body is-flex is-flex-direction-column  has-text-centered">
+        <div
+          id="hero-text"
+          className="is-flex is-flex-direction-column has-text-centered"
+        >
+          <p className="block title is-size-1 is-size-2-mobile has-text-weight-bold">
             Make cooking faster and more enjoyable!
           </p>
-          <div className="buttons are-medium is-align-self-center">
+          <p className="block is-size-5">
+            Store recipes, group them by categories and get voice assistance
+            while cooking!
+          </p>
+          <div className="buttons are-medium is-align-self-center is-justify-content-center	">
             <button className="button is-black">
               <Link className="has-text-white" to="/">
                 How it works?
@@ -29,7 +36,10 @@ const Home: React.FC = ({}) => {
             </button>
           </div>
         </div>
-        <div id="hero-img">
+        <div
+          id="hero-img-container"
+          className="is-flex is-align-items-flex-end is-justify-content-center"
+        >
           <img src={heroImg} alt="illiustration of a chef cooking" />
         </div>
       </div>

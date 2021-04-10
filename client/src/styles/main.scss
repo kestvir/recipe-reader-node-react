@@ -32,17 +32,32 @@ section {
 }
 
 .hero-body {
-    padding-top: 4.5rem !important;
+    margin-top: 2rem !important;
 }
 
-#hero-img {
+#hero-img-container {
     line-height: 0;
+    margin-bottom: -1.5rem;
 }
 
 .content ol,
 .content ul {
     list-style-position: inside !important;
     margin-left: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+    #hero-img-container {
+        display: none !important;
+    }
+    .hero-body {
+        margin-top: 0 !important;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 768px) {
 }
 
 @import "../../node_modules/bulma/bulma.sass";
