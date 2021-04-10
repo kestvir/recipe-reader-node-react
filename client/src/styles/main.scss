@@ -39,4 +39,10 @@ section {
     line-height: 0;
 }
 
+.content ol,
+.content ul {
+    list-style-position: inside !important;
+    margin-left: 0 !important;
+}
+
 @import "../../node_modules/bulma/bulma.sass";
