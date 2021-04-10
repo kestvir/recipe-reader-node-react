@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import { State } from "../shared/types";
 import Recipes from "../components/Recipes/Recipes";
 import RecipeDetails from "../components/Recipes/RecipeDetails";
+import NotFound from "../components/NotFound";
 
 interface routesProps {}
 
@@ -40,6 +41,7 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
         component={RecipeDetails}
         isAuth={!!userId}
       />
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 };
