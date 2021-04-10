@@ -3,6 +3,10 @@
 @import "variables";
 @import "richTextEditor";
 
+html {
+    overflow-y: auto !important;
+}
+
 body {
     background: $light;
 }
@@ -57,7 +61,10 @@ section {
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 425px) {
+    .container .box {
+        padding: 1rem !important;
+    }
 }
 
 @import "../../node_modules/bulma/bulma.sass";

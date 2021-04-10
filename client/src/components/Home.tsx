@@ -20,7 +20,7 @@ const Home: React.FC = ({}) => {
             Store recipes, group them by categories and get voice assistance
             while cooking!
           </p>
-          <div className="buttons are-medium is-align-self-center is-justify-content-center	">
+          <div className="buttons are-medium is-align-self-center is-justify-content-center">
             <button className="button is-black">
               <Link className="has-text-white" to="/">
                 How it works?
@@ -38,7 +38,7 @@ const Home: React.FC = ({}) => {
         </div>
         <div
           id="hero-img-container"
-          className="is-flex is-align-items-flex-end is-justify-content-center"
+          className="is-flex is-flex-grow-1	 is-align-items-flex-end is-justify-content-center"
         >
           <img src={heroImg} alt="illiustration of a chef cooking" />
         </div>
