@@ -137,7 +137,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   }
 
   return (
-    <section className="section">
+    <section id="addOrUpdateRecipeSection" className="section">
       <div className="container">
         <div className="columns">
           <div className="column is-three-fifths is-offset-one-fifth box px-6 py-5">

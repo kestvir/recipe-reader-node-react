@@ -44,7 +44,7 @@ const IngredientOrInstructionRichTextField: React.FC<IngredientOrInstructionRich
   };
 
   return (
-    <div className="field">
+    <div className="field text-editor-field">
       <div className="level">
         <div className="level-left">
           <label className="label">{label}</label>

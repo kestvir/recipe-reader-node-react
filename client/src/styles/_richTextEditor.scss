@@ -27,3 +27,27 @@
 .RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
     display: none;
 }
+
+@media screen and (max-width: 1218px) {
+    .text-editor-field {
+        margin-bottom: 2.5rem !important;
+    }
+}
+
+@media screen and (max-width: 798px) {
+    .text-editor-field {
+        margin-bottom: 3rem !important;
+    }
+}
+
+@media screen and (max-width: 428px) {
+    .text-editor-field {
+        margin-bottom: 4.5rem !important;
+    }
+}
+
+@media screen and (max-width: 366px) {
+    #addOrUpdateRecipeSection {
+        padding: 3rem 0rem !important;
+    }
+}
