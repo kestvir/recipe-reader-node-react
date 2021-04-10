@@ -66,15 +66,15 @@ const Header: React.FC<HeaderProps> = ({}) => {
             <div className="navbar-item">
               <div className="buttons">
                 {userId ? (
-                  <a className="button is-primary" onClick={logout}>
+                  <a className="button is-primary is-light" onClick={logout}>
                     <strong>Log out</strong>
                   </a>
                 ) : (
                   <>
-                    <Link to="/signup" className="button is-primary">
+                    <Link to="/signup" className="button is-primary is-light">
                       <strong>Sign up</strong>
                     </Link>
-                    <Link to="/login" className="button is-light">
+                    <Link to="/login" className="button is-primary is-outlined">
                       <strong>Log in</strong>
                     </Link>
                   </>

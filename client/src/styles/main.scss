@@ -27,4 +27,16 @@ section {
     }
 }
 
+.hero {
+    background-color: $primary-light;
+}
+
+.hero-body {
+    padding-top: 4.5rem !important;
+}
+
+#hero-img {
+    line-height: 0;
+}
+
 @import "../../node_modules/bulma/bulma.sass";
