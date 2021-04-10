@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -14,6 +14,8 @@ const Header: React.FC<HeaderProps> = ({}) => {
   const dispatch = useAppDispatch();
   const history = useHistory();
 
+  const [isActive, setisActive] = useState(false);
+
   const logout = () => {
     dispatch(logoutAction());
     history.push("/");
@@ -27,8 +29,11 @@ const Header: React.FC<HeaderProps> = ({}) => {
             <FontAwesomeIcon icon={faPizzaSlice} />
           </Link>
           <a
+            onClick={() => {
+              setisActive((prevState) => !prevState);
+            }}
             role="button"
-            className="navbar-burger"
+            className={`navbar-burger burger ${isActive ? "is-active" : ""}`}
             aria-label="menu"
             aria-expanded="false"
             data-target="navbarBasicExample"
@@ -39,7 +44,10 @@ const Header: React.FC<HeaderProps> = ({}) => {
           </a>
         </div>
 
-        <div id="navbarBasicExample" className="navbar-menu">
+        <div
+          id="navbarBasicExample"
+          className={`navbar-menu ${isActive ? "is-active" : ""}`}
+        >
           <div className="navbar-start">
             <Link className="navbar-item" to="/">
               Home
