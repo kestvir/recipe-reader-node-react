@@ -58,6 +58,7 @@ export interface InitialActiveRecipe {
 export interface RecipesState extends ReqStatus {
   recipes: RecipeApiData[];
   activeRecipe: RecipeApiData;
+  initialLoadAllRecipes: boolean;
 }
 
 export interface AuthState extends ReqStatus, User {}

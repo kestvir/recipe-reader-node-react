@@ -30,6 +30,7 @@ export const initialRecipesState: RecipesState = {
   recipes: [],
   activeRecipe: getActiveRecipeFromLocalStorage() as RecipeApiData,
   ...initialReqState,
+  initialLoadAllRecipes: true,
 };
 
 const initialAddOrUpdateRecipeErrors = {
@@ -48,6 +49,7 @@ export const getRecipes = createAsyncThunk<
   try {
     const res = await axios.get(getAllRecipesURL);
     dispatch(setRecipes({ recipes: res.data }));
+    dispatch(setInitialAllRecipesLoadFalse());
   } catch (err) {
     console.log(err);
     const { status, statusText } = err.response;
@@ -151,7 +153,7 @@ const recipesSlice = createSlice({
       });
       state.recipes[changedRecipeIndex] = payload.recipe;
     },
-    setupActiveRecipe: (
+    setActiveRecipe: (
       state,
       { payload }: PayloadAction<{ recipeToUpdate: RecipeApiData }>
     ) => {
@@ -167,6 +169,9 @@ const recipesSlice = createSlice({
       state.isSuccess = false;
       state.errors.status = null;
       state.errors.message = "";
+    },
+    setInitialAllRecipesLoadFalse: (state) => {
+      state.initialLoadAllRecipes = false;
     },
   },
   extraReducers: (builder) =>
@@ -187,7 +192,8 @@ export const {
   removeRecipe,
   resetReqState,
   resetActiveRecipe,
-  setupActiveRecipe,
+  setActiveRecipe,
+  setInitialAllRecipesLoadFalse,
 } = recipesSlice.actions;
 
 export default recipesSlice.reducer;

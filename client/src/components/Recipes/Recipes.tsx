@@ -8,18 +8,23 @@ import Progressbar from "../UI/Progressbar";
 interface PostsProps {}
 
 const Recipes: React.FC<PostsProps> = ({}) => {
-  const { isSuccess, isLoading, errors, recipes } = useAppSelector(
-    (state: State) => state.recipes
-  );
+  const {
+    isSuccess,
+    isLoading,
+    errors,
+    recipes,
+    initialLoadAllRecipes,
+  } = useAppSelector((state: State) => state.recipes);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getRecipes());
-
+    if (initialLoadAllRecipes) {
+      dispatch(getRecipes());
+    }
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [initialLoadAllRecipes]);
 
   useEffect(() => {
     if (isSuccess) {
