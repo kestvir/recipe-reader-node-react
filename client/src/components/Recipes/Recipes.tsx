@@ -5,6 +5,7 @@ import { getRecipes, resetReqState } from "../../redux/slices/recipesSlice";
 import RecipeCard from "./RecipeCard";
 import Progressbar from "../UI/Progressbar";
 import RecipesFilteTabs from "./RecipesFiltertTabs";
+import SearchRecipesInput from "./SearchRecipesInput";
 
 interface PostsProps {}
 
@@ -19,6 +20,7 @@ const Recipes: React.FC<PostsProps> = ({}) => {
   const dispatch = useAppDispatch();
 
   const [activeTab, setActiveTab] = useState("All");
+  const [searchVal, setSearchVal] = useState("");
 
   useEffect(() => {
     if (initialLoadAllRecipes) {
@@ -41,15 +43,20 @@ const Recipes: React.FC<PostsProps> = ({}) => {
     setActiveTab(tab);
   };
 
+  const filteredBySearchRecipes = recipes.filter((recipe) => {
+    return recipe.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
+  });
+
   return (
     <section className="section">
       <div className="container">
+        <SearchRecipesInput searchVal={searchVal} setSearchVal={setSearchVal} />
         <RecipesFilteTabs
           activeTab={activeTab}
           changeActiveTab={changeActiveTab}
         />
         <div className="columns is-multiline is-justify-content-center	">
-          {recipes.map((recipe, index) => {
+          {filteredBySearchRecipes.map((recipe, index) => {
             return (
               <div
                 className="column is-one-quarter-desktop is-half-tablet"
