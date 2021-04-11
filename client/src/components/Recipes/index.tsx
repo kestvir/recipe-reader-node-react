@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
+import { Link } from "react-router-dom";
 import { State } from "../../shared/types";
 import { getRecipes, resetReqState } from "../../redux/slices/recipesSlice";
 import RecipeCard from "./RecipeCard";
@@ -48,14 +49,34 @@ const Recipes: React.FC<PostsProps> = ({}) => {
   });
 
   return (
-    <section className="section">
+    <section id="recipes-section" className="section">
       <div className="container">
-        <SearchRecipesInput searchVal={searchVal} setSearchVal={setSearchVal} />
-        <RecipesFilteTabs
-          activeTab={activeTab}
-          changeActiveTab={changeActiveTab}
-        />
-        <div className="columns is-multiline is-justify-content-center	">
+        {!recipes.length ? (
+          <div className="is-flex is-flex-direction-column is-align-items-center">
+            <p className="title">No recipes found.</p>
+            <button className="button is-primary is-medium">
+              <Link className="has-text-white" to="/recipes/add">
+                Add a recipe!
+              </Link>
+            </button>
+          </div>
+        ) : (
+          <>
+            <SearchRecipesInput
+              searchVal={searchVal}
+              setSearchVal={setSearchVal}
+            />
+            <RecipesFilteTabs
+              activeTab={activeTab}
+              changeActiveTab={changeActiveTab}
+            />
+          </>
+        )}
+
+        <div className="columns is-multiline is-justify-content-center mt-3">
+          {!filteredBySearchRecipes.length && (
+            <p className="title">No recipes found.</p>
+          )}
           {filteredBySearchRecipes.map((recipe, index) => {
             return (
               <div

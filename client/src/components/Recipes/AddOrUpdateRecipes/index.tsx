@@ -195,6 +195,7 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                       isLoading && "is-loading"
                     }`}
                     type="submit"
+                    disabled={isSuccess && true}
                   >
                     <strong>Submit</strong>
                   </button>

@@ -9,7 +9,7 @@ import ResetPassword from "../components/Auth/ResetPassword";
 import AddOrUpdateRecipe from "../components/Recipes/AddOrUpdateRecipes";
 import ProtectedRoute from "./ProtectedRoute";
 import { State } from "../shared/types";
-import Recipes from "../components/Recipes/Recipes";
+import Recipes from "../components/Recipes";
 import RecipeDetails from "../components/Recipes/RecipeDetails";
 import NotFound from "../components/NotFound";
 
