@@ -13,6 +13,7 @@ import {
   updateRecipe,
   resetReqState,
 } from "../../../redux/slices/recipesSlice";
+import SuccessMessage from "../../UI/SuccessMessage";
 
 interface AddOrUpdateRecipeProps {}
 
@@ -62,8 +63,13 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess || errors.status === 401) {
+    if (errors.status === 401) {
       history.push("/");
+    }
+    if (isSuccess) {
+      setTimeout(() => {
+        history.push("/recipes");
+      }, 1700);
     }
   }, [isSuccess, errors]);
 
@@ -142,6 +148,12 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
         <div className="columns">
           <div className="column is-three-fifths is-offset-one-fifth box px-6 py-5">
             <form onSubmit={handleSubmit}>
+              {isSuccess && params.id && (
+                <SuccessMessage successText="Recipe updated!" />
+              )}
+              {isSuccess && !params.id && (
+                <SuccessMessage successText="Recipe added!" />
+              )}
               <Input
                 value={title}
                 name="title"

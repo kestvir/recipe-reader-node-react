@@ -75,8 +75,8 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
               dangerouslySetInnerHTML={{ __html: htmlIngredients }}
             />
           </div>
-          <div className="block is-align-self-center">
-            <h4 className="title is-5 has-text-centered">Instructions</h4>
+          <div className="block is-align-self-center has-text-centered">
+            <h4 className="title is-5">Instructions</h4>
             <div
               className="content"
               dangerouslySetInnerHTML={{ __html: htmlInstructions }}

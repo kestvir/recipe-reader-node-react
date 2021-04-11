@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import Input from "../UI/Input";
 import { State } from "../../shared/types";
 import { forgotPassword, resetReqState } from "../../redux/slices/authSlice";
+import SuccessMessage from "../UI/SuccessMessage";
 
 interface ForgotPasswordProps {}
 
@@ -62,13 +63,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
             </h3>
             <form onSubmit={handleSubmit}>
               {isSuccess && (
-                <div className="field">
-                  <div className="control">
-                    <div className="notification has-text-centered is-size-5">
-                      <strong>Email sent successfully!</strong>
-                    </div>
-                  </div>
-                </div>
+                <SuccessMessage successText="Email sent successfully!" />
               )}
               <Input
                 value={email}

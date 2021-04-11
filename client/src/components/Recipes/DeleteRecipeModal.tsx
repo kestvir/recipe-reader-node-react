@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { deleteRecipe, resetReqState } from "../../redux/slices/recipesSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { State } from "../../shared/types";
+import SuccessMessage from "../UI/SuccessMessage";
 
 interface DeletRecipeModalProps {
   closeModal: () => void;
@@ -27,7 +28,9 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
 
   useEffect(() => {
     if (isSuccess) {
-      history.push("/");
+      setTimeout(() => {
+        history.push("/recipes");
+      }, 10700);
     }
     return () => {
       dispatch(resetReqState());
@@ -39,7 +42,7 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
   };
 
   return (
-    <div className="modal is-active">
+    <div className="modal is-active has-text-centered">
       <div className="modal-background" onClick={closeModal}></div>
       <div className="modal-content">
         <div className="box">

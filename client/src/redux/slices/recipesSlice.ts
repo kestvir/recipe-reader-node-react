@@ -114,7 +114,6 @@ export const deleteRecipe = createAsyncThunk<
 >("recipes/deleteRecipe", async (recipeId, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.delete(deleteRecipeURL(recipeId));
-    console.log(res.data);
     dispatch(removeRecipe({ id: res.data }));
   } catch (err) {
     console.log(err);
@@ -141,7 +140,7 @@ const recipesSlice = createSlice({
     },
     removeRecipe: (state, { payload }: PayloadAction<{ id: string }>) => {
       state.recipes = state.recipes.filter((recipe) => {
-        if (recipe._id === payload.id) return recipe;
+        if (recipe._id !== payload.id) return recipe;
       });
     },
     changeRecipe: (

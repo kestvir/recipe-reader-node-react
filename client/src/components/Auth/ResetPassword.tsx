@@ -8,6 +8,7 @@ import Input from "../UI/Input";
 import { resetPasswordTokenURL } from "../../shared/constants";
 import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
 import ProgressBar from "../UI/Progressbar";
+import SuccessMessage from "../UI/SuccessMessage";
 
 interface ResetPasswordProps {}
 
@@ -121,13 +122,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
             </h3>
             <form onSubmit={handleSubmit}>
               {isSuccess && (
-                <div className="field">
-                  <div className="control">
-                    <div className="notification has-text-centered is-size-5">
-                      <strong>Password successfully reset!</strong>
-                    </div>
-                  </div>
-                </div>
+                <SuccessMessage successText="Password successfully reset!" />
               )}
               <Input
                 value={form.password}
