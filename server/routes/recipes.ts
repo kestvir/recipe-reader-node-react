@@ -42,7 +42,7 @@ router.post(
         const user = await User.findById(reqUser.id);
         user.recipes.push(recipe);
         await user.save();
-        res.send(recipeDataObj);
+        res.send(recipe);
       } catch (err) {
         if (!err.statusCode) {
           err.statusCode = 500;

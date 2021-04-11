@@ -11,6 +11,7 @@ interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const dispatch = useAppDispatch();
   const { title, img, category, _id } = recipe;
+  console.log(recipe);
   const id = _id as string;
   const imgSrc = img.file as string;
   return (

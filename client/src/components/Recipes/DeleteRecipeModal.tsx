@@ -28,12 +28,17 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
 
   useEffect(() => {
     if (isSuccess) {
-      history.push("/recipes");
+      setTimeout(() => {
+        history.push("/recipes");
+      }, 1700);
     }
+  }, [isSuccess]);
+
+  useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, [isSuccess]);
+  }, []);
 
   const handleDeleteRecipe = () => {
     dispatch(deleteRecipe(params.id));
@@ -43,27 +48,31 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
     <div className="modal is-active has-text-centered">
       <div className="modal-background" onClick={closeModal}></div>
       <div className="modal-content">
-        <div className="box">
-          <div className="block">
-            <h4 className="title is-4">Delete Recipe</h4>
-            <p className="is-size-5">
-              Are you sure you want to delete the recipe: {recipeTitle}?
-            </p>
-          </div>
-          <div className="block">
-            <div className="buttons are-medium is-flex is-justify-content-center">
-              <button className="button is-black" onClick={closeModal}>
-                No
-              </button>
-              <button
-                className={`button is-primary ${isLoading && "is-loading"}`}
-                onClick={handleDeleteRecipe}
-              >
-                Yes
-              </button>
+        {isSuccess ? (
+          <SuccessMessage successText="Recipe deleted!" />
+        ) : (
+          <div className="box">
+            <div className="block">
+              <h4 className="title is-4">Delete Recipe</h4>
+              <p className="is-size-5">
+                Are you sure you want to delete the recipe: {recipeTitle}?
+              </p>
+            </div>
+            <div className="block">
+              <div className="buttons are-medium is-flex is-justify-content-center">
+                <button className="button is-black" onClick={closeModal}>
+                  No
+                </button>
+                <button
+                  className={`button is-primary ${isLoading && "is-loading"}`}
+                  onClick={handleDeleteRecipe}
+                >
+                  Yes
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
       <button
         className="modal-close is-large"

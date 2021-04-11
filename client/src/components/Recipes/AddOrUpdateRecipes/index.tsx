@@ -148,12 +148,6 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
         <div className="columns">
           <div className="column is-three-fifths is-offset-one-fifth box px-6 py-5">
             <form onSubmit={handleSubmit}>
-              {isSuccess && params.id && (
-                <SuccessMessage successText="Recipe updated!" />
-              )}
-              {isSuccess && !params.id && (
-                <SuccessMessage successText="Recipe added!" />
-              )}
               <Input
                 value={title}
                 name="title"
@@ -206,6 +200,12 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
                   </button>
                 </div>
               </div>
+              {isSuccess && params.id && (
+                <SuccessMessage successText="Recipe updated!" />
+              )}
+              {isSuccess && !params.id && (
+                <SuccessMessage successText="Recipe added!" />
+              )}
             </form>
           </div>
         </div>
