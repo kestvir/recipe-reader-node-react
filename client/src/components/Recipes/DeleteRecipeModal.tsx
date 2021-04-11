@@ -28,9 +28,7 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
 
   useEffect(() => {
     if (isSuccess) {
-      setTimeout(() => {
-        history.push("/recipes");
-      }, 10700);
+      history.push("/recipes");
     }
     return () => {
       dispatch(resetReqState());
