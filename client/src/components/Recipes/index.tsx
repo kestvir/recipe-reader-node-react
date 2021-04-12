@@ -5,7 +5,7 @@ import { State } from "../../shared/types";
 import { getRecipes, resetReqState } from "../../redux/slices/recipesSlice";
 import RecipeCard from "./RecipeCard";
 import Progressbar from "../UI/Progressbar";
-import RecipesFilteTabs from "./RecipesFiltertTabs";
+import FilterRecipesTabs from "./FilterRecipesTabs";
 import SearchRecipesInput from "./SearchRecipesInput";
 
 interface PostsProps {}
@@ -51,7 +51,7 @@ const Recipes: React.FC<PostsProps> = ({}) => {
   return (
     <section id="recipes-section" className="section">
       <div className="container">
-        {!recipes.length ? (
+        {!recipes.length && !initialLoadAllRecipes ? (
           <div className="is-flex is-flex-direction-column is-align-items-center">
             <p className="title">No recipes found.</p>
             <button className="button is-primary is-medium">
@@ -66,7 +66,7 @@ const Recipes: React.FC<PostsProps> = ({}) => {
               searchVal={searchVal}
               setSearchVal={setSearchVal}
             />
-            <RecipesFilteTabs
+            <FilterRecipesTabs
               activeTab={activeTab}
               changeActiveTab={changeActiveTab}
             />
@@ -74,7 +74,7 @@ const Recipes: React.FC<PostsProps> = ({}) => {
         )}
 
         <div className="columns is-multiline is-justify-content-center mt-3">
-          {!filteredBySearchRecipes.length && (
+          {!filteredBySearchRecipes.length && !initialLoadAllRecipes && (
             <p className="title">No recipes found.</p>
           )}
           {filteredBySearchRecipes.map((recipe, index) => {

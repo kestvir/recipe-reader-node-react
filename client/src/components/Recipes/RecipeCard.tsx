@@ -22,10 +22,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
         </figure>
       </div>
       <div className="card-content has-text-centered">
-        <div className="media mb-0">
-          <div className="media-content">
-            <p className="title is-4">{title}</p>
-          </div>
+        <div className="media mb-0 is-justify-content-center">
+          <p className="title is-4">{title}</p>
         </div>
         <div className="content">
           <span className="tag is-primary is-light is-medium is-rounded my-2">

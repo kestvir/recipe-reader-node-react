@@ -59,6 +59,12 @@ section {
     border-color: $primary !important;
 }
 
+#recipe-details-section {
+    span {
+        background-color: initial !important;
+    }
+}
+
 @media screen and (max-width: 768px) {
     #hero-img-container {
         display: none !important;
@@ -67,6 +73,15 @@ section {
         margin-top: 0 !important;
         justify-content: center;
         align-items: center;
+    }
+    #recipes-section {
+        display: block !important;
+    }
+}
+
+@media screen and (max-width: 460px) {
+    .tabs {
+        font-size: 0.9rem !important;
     }
 }
 

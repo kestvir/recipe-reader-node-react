@@ -1,13 +1,13 @@
 import React from "react";
 
-interface RecipesFiltertTabsProps {
+interface FilterRecipesTabsProps {
   activeTab: string;
   changeActiveTab: (tab: string) => void;
 }
 
 const TABS = ["All", "Entree", "Main", "Desert"];
 
-const RecipesFiltertTabs: React.FC<RecipesFiltertTabsProps> = ({
+const FilterRecipesTabs: React.FC<FilterRecipesTabsProps> = ({
   activeTab,
   changeActiveTab,
 }) => {
@@ -32,4 +32,4 @@ const RecipesFiltertTabs: React.FC<RecipesFiltertTabsProps> = ({
   );
 };
 
-export default RecipesFiltertTabs;
+export default FilterRecipesTabs;

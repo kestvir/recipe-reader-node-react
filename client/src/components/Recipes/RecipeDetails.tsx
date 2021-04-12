@@ -39,7 +39,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
   };
 
   return (
-    <section className="section">
+    <section id="recipe-details-section" className="section">
       {isModalOpen && (
         <DeleteRecipeModal closeModal={toggleModal} recipeTitle={title} />
       )}

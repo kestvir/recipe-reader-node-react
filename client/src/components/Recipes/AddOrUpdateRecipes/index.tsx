@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useHistory, useParams } from "react-router-dom";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 import "@nick4fake/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ImgFile, State, AddOrUpdateRecipeErrors } from "../../../shared/types";
 import Input from "../../UI/Input";
@@ -14,6 +14,7 @@ import {
   resetReqState,
 } from "../../../redux/slices/recipesSlice";
 import SuccessMessage from "../../UI/SuccessMessage";
+import { convertRichTextDataFromStrToEditorState } from "../../../utils/richTextUtils";
 
 interface AddOrUpdateRecipeProps {}
 
@@ -57,8 +58,8 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
       setTitle(title);
       setCategory(category);
       setSelectedImg({ name: img.name, file: img.file });
-      setIngredients(convertRichTextDataFromStr(ingredients));
-      setInstructions(convertRichTextDataFromStr(instructions));
+      setIngredients(convertRichTextDataFromStrToEditorState(ingredients));
+      setInstructions(convertRichTextDataFromStrToEditorState(instructions));
     }
   }, []);
 
@@ -78,10 +79,6 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
       dispatch(resetReqState());
     };
   }, []);
-
-  const convertRichTextDataFromStr = (str: string) => {
-    return EditorState.createWithContent(convertFromRaw(JSON.parse(str)));
-  };
 
   const getAndConvertEditorStateToStr = () => {
     let ingredientsStr;
