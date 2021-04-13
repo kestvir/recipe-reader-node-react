@@ -90,6 +90,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             case "goToDocs":
               history.push("/documentation");
               break;
+            case "goBack":
+              history.goBack();
+              break;
             case "openRecipe":
               history.push(`/recipe/${commandData.recipeId}`);
               break;

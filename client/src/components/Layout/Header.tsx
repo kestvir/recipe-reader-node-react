@@ -53,7 +53,9 @@ const Header: React.FC<HeaderProps> = ({}) => {
               Home
             </Link>
 
-            <a className="navbar-item">Documentation</a>
+            <Link className="navbar-item" to="/documentation">
+              Documentation
+            </Link>
 
             {userId && (
               <div className="navbar-item has-dropdown is-hoverable">

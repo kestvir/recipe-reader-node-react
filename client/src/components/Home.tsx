@@ -22,14 +22,14 @@ const Home: React.FC = ({}) => {
           </p>
           <div className="buttons are-medium is-align-self-center is-justify-content-center">
             <button className="button is-black">
-              <Link className="has-text-white" to="/">
+              <Link className="has-text-white" to="/documentation">
                 How it works?
               </Link>
             </button>
             <button className="button is-primary">
               <Link
                 className="has-text-white"
-                to={`${userId ? "/recipes/add" : "/singup"}`}
+                to={`${userId ? "/recipes/add" : "/signup"}`}
               >
                 {`${userId ? "Add a recipe" : "Join us!"} `}
               </Link>
