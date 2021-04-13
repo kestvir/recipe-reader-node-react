@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import User from "../models/user";
-import Recipe from "../models/Recipe";
+import Recipe from "../models/recipe";
 import { validationResult } from "express-validator";
 import * as recipeValidators from "../validators/recipes";
 import { checkValidationErrors } from "../utils/errorUtils";
@@ -67,7 +67,7 @@ router.put(
           recipeId,
           { $set: req.body },
           { new: true },
-          (err, recipe) => {
+          (err: Error, recipe: IRecipe) => {
             if (!err) {
               res.send(recipe);
             }
