@@ -1,24 +1,26 @@
 # Recipe reader
 
-The Ecommerce store web app simulates online item purchases from a general ecommerce store.
+The Recipe reader web app lets users store all of their recipes and provides voice assistance to make cooking faster and more enjoyable.
 
-https://my-ecommerce-store.netlify.app/
+https://recipe-reader.netlify.app/
 
-![products](https://user-images.githubusercontent.com/25966281/114882139-5226c200-9e0c-11eb-8c70-9274ee2e78f5.png)
+![recipe reader](https://user-images.githubusercontent.com/25966281/114888176-ad0ee800-9e11-11eb-9aa1-943b25dda7ee.PNG)
 
 ## Technologies used
 
-Django, React, Redux, Semantic UI React, Stripe.
+React, Redux Toolkit, Node, Express, Mongo DB, Mongoose, Passport.js, Alan AI.
 
 ## User Stories
 
--   [x] Users can add items to a cart with the desired quantity.
--   [x] Users can increase and decrease the quantity of the items inside the cart, or completely remove them from it.
--   [x] Users have to be authenticated in order to make purchases.
--   [x] Users can request password reset, change their email, username and password.
--   [x] Users have to provide a shipping and billing address to be able to purchase items.
--   [x] Users can purchase items via Stripe.
--   [x] Users can see their purchase history.
+-   [x] Users have to be authenticated to use the web app.
+-   [x] Users can choose to get authenticated with email and password or using social auth with Google or Facebook.
+-   [x] Users can reset their password.
+-   [x] Users can add, updated, read and delete recipes.
+-   [x] Users can filter recipes by categories.
+-   [x] Users can search for recipes by their title.
+-   [x] Users can use voice assistant to navigate around the map.
+-   [x] Users can use voice assistant to get the list of ingredients or instructions of a particular recipe read to them.
 
+## Potential Features
 
-This is the client-side for the Ecommerce store web app. The apps backend can be found here: https://github.com/kestvir/ecommerce-store-api
+- More voice assistance features.
