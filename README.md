@@ -18,8 +18,8 @@ React, Redux Toolkit, Node, Express, Mongo DB, Mongoose, Passport.js, Alan AI.
 -   [x] Users can add, update, read and delete recipes.
 -   [x] Users can filter recipes by categories.
 -   [x] Users can search for recipes by their title.
--   [x] Users can use voice assistant to navigate around the map.
--   [x] Users can use voice assistant to get the list of ingredients or instructions of a particular recipe read to them.
+-   [x] Users can use voice assistance to navigate around the map.
+-   [x] Users can use voice assistance to get the list of ingredients or instructions of a particular recipe read to them.
 
 ## Potential Features
 
