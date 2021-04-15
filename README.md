@@ -15,7 +15,7 @@ React, Redux Toolkit, Node, Express, Mongo DB, Mongoose, Passport.js, Alan AI.
 -   [x] Users have to be authenticated to use the web app.
 -   [x] Users can choose to get authenticated with email and password or using social auth with Google or Facebook.
 -   [x] Users can reset their password.
--   [x] Users can add, updated, read and delete recipes.
+-   [x] Users can add, update, read and delete recipes.
 -   [x] Users can filter recipes by categories.
 -   [x] Users can search for recipes by their title.
 -   [x] Users can use voice assistant to navigate around the map.
