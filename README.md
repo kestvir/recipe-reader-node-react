@@ -8,7 +8,7 @@ https://recipe-reader.netlify.app/
 
 ## Technologies used
 
-React, Redux Toolkit, Node, Express, Mongo DB, Mongoose, Passport.js, Alan AI.
+Typescript, React, Redux Toolkit, Node, Express, Mongo DB, Mongoose, Passport.js, Alan AI.
 
 ## User Stories
 
