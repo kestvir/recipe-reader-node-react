@@ -1,6 +1,6 @@
 # Recipe reader
 
-The Recipe reader web app lets users store all of their recipes and provides voice assistance to make cooking faster and more enjoyable.
+The Recipe reader web app lets users manage all of their recipes in one place and provides voice assistance to make cooking faster and more enjoyable.
 
 https://recipe-reader.netlify.app/
 
