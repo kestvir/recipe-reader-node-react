@@ -219,7 +219,7 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addMatcher(
-        isThunk(getUser, signup, login, forgotPassword, resetPassword),
+        isThunk(signup, login, forgotPassword, resetPassword),
         thunkHandler
       ),
 });
