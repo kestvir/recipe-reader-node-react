@@ -21,19 +21,16 @@ const Home: React.FC = ({}) => {
             while cooking!
           </p>
           <div className="buttons are-medium is-align-self-center is-justify-content-center">
-            <button className="button is-black">
-              <Link className="has-text-white" to="/documentation">
-                How it works?
-              </Link>
-            </button>
-            <button className="button is-primary">
-              <Link
-                className="has-text-white"
-                to={`${userId ? "/recipes/add" : "/signup"}`}
-              >
-                {`${userId ? "Add a recipe" : "Join us!"} `}
-              </Link>
-            </button>
+            <Link to="/documentation" className="button is-black">
+              How it works?
+            </Link>
+
+            <Link
+              to={`${userId ? "/recipes/add" : "/signup"}`}
+              className="button is-primary"
+            >
+              {`${userId ? "Add a recipe" : "Join us!"} `}
+            </Link>
           </div>
         </div>
         <div
