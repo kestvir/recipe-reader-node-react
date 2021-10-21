@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { deleteRecipe, resetReqState } from "../../redux/slices/recipesSlice";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
@@ -14,10 +14,10 @@ interface Params {
   id: string;
 }
 
-const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
+const DeletRecipeModal = ({
   closeModal,
   recipeTitle,
-}) => {
+}: DeletRecipeModalProps) => {
   const { isLoading, isSuccess } = useAppSelector(
     (state: State) => state.recipes
   );
@@ -32,13 +32,13 @@ const DeletRecipeModal: React.FC<DeletRecipeModalProps> = ({
         history.push("/recipes");
       }, 1700);
     }
-  }, [isSuccess]);
+  }, [isSuccess, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
   const handleDeleteRecipe = () => {
     dispatch(deleteRecipe(params.id));

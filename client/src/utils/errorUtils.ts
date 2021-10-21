@@ -46,7 +46,7 @@ export const setupMultipleRecipeErrors = (
       case "category":
         formattedErrorObj.categoryErrorMessage = msg;
         break;
-      case "img":
+      case "img.file":
         formattedErrorObj.imgErrorMessage = msg;
         break;
       case "ingredients":

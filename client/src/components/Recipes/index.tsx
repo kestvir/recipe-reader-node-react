@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { Link } from "react-router-dom";
 import { State } from "../../shared/types";
@@ -7,19 +7,16 @@ import RecipeCard from "./RecipeCard";
 import Progressbar from "../UI/Progressbar";
 import FilterRecipesTabs from "./FilterRecipesTabs";
 import SearchRecipesInput from "./SearchRecipesInput";
+import { RecipeApiData } from "../../shared/types";
 
-interface PostsProps {}
-
-const Recipes: React.FC<PostsProps> = ({}) => {
-  const {
-    isSuccess,
-    isLoading,
-    errors,
-    recipes,
-    initialLoadAllRecipes,
-  } = useAppSelector((state: State) => state.recipes);
+const Recipes = () => {
+  const { isSuccess, isLoading, recipes, initialLoadAllRecipes } =
+    useAppSelector((state: State) => state.recipes);
   const dispatch = useAppDispatch();
 
+  const [filteredRecipes, setFilteredRecipes] = useState<Array<RecipeApiData>>(
+    []
+  );
   const [activeTab, setActiveTab] = useState("All");
   const [searchVal, setSearchVal] = useState("");
 
@@ -27,44 +24,76 @@ const Recipes: React.FC<PostsProps> = ({}) => {
     if (initialLoadAllRecipes) {
       dispatch(getRecipes());
     }
+
+    if (recipes.length) setFilteredRecipes(recipes);
+
     return () => {
       dispatch(resetReqState());
     };
-  }, [initialLoadAllRecipes]);
+  }, [initialLoadAllRecipes, recipes, dispatch]);
 
   useEffect(() => {
     if (isSuccess) {
       dispatch(resetReqState());
     }
-  }, [isSuccess]);
+  }, [isSuccess, dispatch]);
 
   if (isLoading) return <Progressbar />;
 
   const changeActiveTab = (tab: string) => {
     setActiveTab(tab);
+    setSearchVal("");
+
+    if (tab === "All") {
+      setFilteredRecipes(recipes);
+      return;
+    }
+
+    filterRecipesByCategory(tab);
   };
 
-  const filteredBySearchRecipes = recipes.filter((recipe) => {
-    return recipe.title.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1;
-  });
+  const filterRecipesByCategory = (tab: string) => {
+    const filteredByCategoryRecipes = recipes.filter(
+      (recipe) => recipe.category === tab.toLowerCase()
+    );
+
+    setFilteredRecipes(filteredByCategoryRecipes);
+  };
+
+  const filterRecipesBySearch = (searchVal: string) => {
+    setSearchVal(searchVal);
+
+    if (!searchVal.trim()) {
+      filterRecipesByCategory(activeTab);
+      return;
+    }
+
+    const filteredRecipesBySearch = filteredRecipes.filter(
+      (recipe) =>
+        recipe.title.toLowerCase().indexOf(searchVal.trim().toLowerCase()) !==
+        -1
+    );
+
+    setFilteredRecipes(filteredRecipesBySearch);
+  };
 
   return (
     <section id="recipes-section" className="section">
       <div className="container">
         {!recipes.length && !initialLoadAllRecipes ? (
-          <div className="is-flex is-flex-direction-column is-align-items-center">
+          <div className="is-flex is-flex-direction-column is-align-items-center is-justify-content-center is-fullheight">
             <p className="title">No recipes found.</p>
-            <button className="button is-primary is-medium">
-              <Link className="has-text-white" to="/recipes/add">
+            <Link className="has-text-white" to="/recipes/add">
+              <button className="button is-primary is-medium">
                 Add a recipe!
-              </Link>
-            </button>
+              </button>
+            </Link>
           </div>
         ) : (
           <>
             <SearchRecipesInput
               searchVal={searchVal}
-              setSearchVal={setSearchVal}
+              filterRecipesBySearch={filterRecipesBySearch}
             />
             <FilterRecipesTabs
               activeTab={activeTab}
@@ -74,20 +103,14 @@ const Recipes: React.FC<PostsProps> = ({}) => {
         )}
 
         <div className="columns is-multiline is-justify-content-center mt-3">
-          {!filteredBySearchRecipes.length && !initialLoadAllRecipes && (
+          {!filteredRecipes.length && (
             <p className="title">No recipes found.</p>
           )}
-          {filteredBySearchRecipes.map((recipe, index) => {
+          {filteredRecipes.map((recipe, index) => {
             return (
               <div
                 className="column is-one-quarter-desktop is-half-tablet"
                 key={index}
-                style={
-                  activeTab.toLocaleLowerCase() !== recipe.category &&
-                  activeTab !== "All"
-                    ? { display: "none" }
-                    : {}
-                }
               >
                 <RecipeCard recipe={recipe} />
               </div>

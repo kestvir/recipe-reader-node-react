@@ -50,8 +50,8 @@ export const getRecipes = createAsyncThunk<
     const res = await axios.get(getAllRecipesURL);
     dispatch(setRecipes({ recipes: res.data }));
     dispatch(setInitialAllRecipesLoadFalse());
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    console.log(err.response);
     const { status, statusText } = err.response;
     return rejectWithValue({ status, message: statusText });
   }
@@ -65,8 +65,8 @@ export const addRecipe = createAsyncThunk<
   try {
     const res = await axios.post(addRecipeURL, { ...recipeData });
     dispatch(attachRecipe({ recipe: res.data }));
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    console.log(err.response);
     const { status, statusText, data } = err.response;
     if (status === 422) {
       const formattedErrors = setupMultipleRecipeErrors(
@@ -92,8 +92,8 @@ export const updateRecipe = createAsyncThunk<
       });
       dispatch(changeRecipe({ recipe: res.data }));
       dispatch(resetActiveRecipe());
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.log(err.response);
       const { status, statusText, data } = err.response;
       if (status === 422) {
         const formattedErrors = setupMultipleRecipeErrors(
@@ -115,8 +115,8 @@ export const deleteRecipe = createAsyncThunk<
   try {
     const res = await axios.delete(deleteRecipeURL(recipeId));
     dispatch(removeRecipe({ id: res.data }));
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    console.log(err.response);
     const { status, statusText } = err.response;
     return rejectWithValue({ status, message: statusText });
   }
@@ -139,9 +139,9 @@ const recipesSlice = createSlice({
       state.recipes.push(payload.recipe);
     },
     removeRecipe: (state, { payload }: PayloadAction<{ id: string }>) => {
-      state.recipes = state.recipes.filter((recipe) => {
-        if (recipe._id !== payload.id) return recipe;
-      });
+      state.recipes = state.recipes.filter(
+        (recipe) => recipe._id !== payload.id
+      );
     },
     changeRecipe: (
       state,
@@ -175,7 +175,7 @@ const recipesSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(getRecipes.pending, (state, action) => {
+      .addCase(getRecipes.pending, (state) => {
         state.isLoading = true;
       })
       .addMatcher(

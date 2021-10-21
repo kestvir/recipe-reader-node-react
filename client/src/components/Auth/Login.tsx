@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { Link, Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import Input from "../UI/Input";
 import SocialAuthButtons from "./SocialAuthButtons";
+import Input from "../UI/Input";
 import { State } from "../../shared/types";
 import { login, resetReqState } from "../../redux/slices/authSlice";
 
@@ -11,7 +11,7 @@ interface LoginProps {}
 
 const initialFormState = { email: "", password: "" };
 
-const Login: React.FC<LoginProps> = ({}) => {
+const Login: React.FC<LoginProps> = () => {
   const userId = useAppSelector((state: State) => state.auth.id);
   const { isLoading, isSuccess, errors } = useAppSelector(
     (state: State) => state.auth
@@ -26,24 +26,27 @@ const Login: React.FC<LoginProps> = ({}) => {
     if (isSuccess) {
       history.push("/");
     }
-  }, [isSuccess]);
+  }, [isSuccess, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const { email, password } = form;
+
     dispatch(login({ email, password }));
   };
 
   let loginError;
+
   if (errors.status === 401 && typeof errors.message === "string") {
     loginError = errors.message;
   }

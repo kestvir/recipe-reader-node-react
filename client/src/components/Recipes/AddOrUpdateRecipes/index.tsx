@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { useHistory, useParams } from "react-router-dom";
 import { EditorState, convertToRaw } from "draft-js";
@@ -16,8 +16,6 @@ import {
 import SuccessMessage from "../../UI/SuccessMessage";
 import { convertRichTextDataFromStrToEditorState } from "../../../utils/richTextUtils";
 
-interface AddOrUpdateRecipeProps {}
-
 interface Params {
   id: string;
 }
@@ -30,7 +28,7 @@ const initialAddOrUpdateRecipeErrors = {
   instructionsErrorMessage: "",
 };
 
-const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
+const AddOrUpdateRecipe = () => {
   const { isLoading, isSuccess, errors, activeRecipe } = useAppSelector(
     (state: State) => state.recipes
   );
@@ -61,24 +59,25 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
       setIngredients(convertRichTextDataFromStrToEditorState(ingredients));
       setInstructions(convertRichTextDataFromStrToEditorState(instructions));
     }
-  }, []);
+  }, [activeRecipe, params.id]);
 
   useEffect(() => {
     if (errors.status === 401) {
       history.push("/");
     }
+
     if (isSuccess) {
       setTimeout(() => {
         history.push("/recipes");
       }, 1700);
     }
-  }, [isSuccess, errors]);
+  }, [isSuccess, errors, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
   const getAndConvertEditorStateToStr = () => {
     let ingredientsStr;
@@ -128,7 +127,8 @@ const AddOrUpdateRecipe: React.FC<AddOrUpdateRecipeProps> = ({}) => {
     instructionsErrorMessage,
   } = initialAddOrUpdateRecipeErrors;
 
-  const addOrUpdateRecipeErrorMessages = errors.message as AddOrUpdateRecipeErrors;
+  const addOrUpdateRecipeErrorMessages =
+    errors.message as AddOrUpdateRecipeErrors;
   if (errors.status === 422) {
     titleErrorMessage = addOrUpdateRecipeErrorMessages.titleErrorMessage;
     categoryErrorMessage = addOrUpdateRecipeErrorMessages.categoryErrorMessage;

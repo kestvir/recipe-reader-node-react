@@ -1,9 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-interface DocumentationProps {}
-
-const Documentation: React.FC<DocumentationProps> = ({}) => {
+const Documentation = () => {
   return (
     <section className="section">
       <div className="container">
@@ -17,7 +14,7 @@ const Documentation: React.FC<DocumentationProps> = ({}) => {
                 </h3>
                 <p>
                   This app uses{" "}
-                  <a href="https://alan.app/" target="_blank">
+                  <a href="https://alan.app/" target="_blank" rel="noreferrer">
                     Alan AI
                   </a>{" "}
                   🤖 for its voice assistance capabilities.
@@ -34,7 +31,7 @@ const Documentation: React.FC<DocumentationProps> = ({}) => {
                 <h3 className="title is-size-5">
                   How to use voice assistance for navigating around the app?
                 </h3>
-                <p>
+                <div>
                   There are three commands for navigating around the app:
                   <ul>
                     <li>
@@ -69,7 +66,7 @@ const Documentation: React.FC<DocumentationProps> = ({}) => {
                       to open to a specific recipe details page.
                     </li>
                   </ul>
-                </p>
+                </div>
                 <h3 className="title is-size-5">
                   How to use voice assistance for cooking?
                 </h3>
@@ -96,9 +93,9 @@ const Documentation: React.FC<DocumentationProps> = ({}) => {
                   <li>Thanks Alan</li>
                   <li>Thank you Alan</li>
                   <li>Alan thank you</li>
-                  <li> Alan thanks</li>
-                  <li> Stop Alan</li>
-                  <li> Alan stop</li>
+                  <li>Alan thanks</li>
+                  <li>Stop Alan</li>
+                  <li>Alan stop</li>
                 </ul>
                 <h3 className="title is-size-5">
                   What else can be done with the voice assistance?

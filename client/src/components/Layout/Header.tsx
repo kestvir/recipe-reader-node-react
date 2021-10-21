@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -7,9 +7,7 @@ import { logout as logoutAction } from "../../redux/slices/authSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPizzaSlice } from "@fortawesome/free-solid-svg-icons";
 
-interface HeaderProps {}
-
-const Header: React.FC<HeaderProps> = ({}) => {
+const Header = () => {
   const userId = useAppSelector((state: State) => state.auth.id);
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -28,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
           <Link className="navbar-item" to="/">
             <FontAwesomeIcon icon={faPizzaSlice} />
           </Link>
-          <a
+          <span
             onClick={() => {
               setisActive((prevState) => !prevState);
             }}
@@ -41,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          </a>
+          </span>
         </div>
 
         <div
@@ -59,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({}) => {
 
             {userId && (
               <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link">Recipes</a>
+                <span className="navbar-link">Recipes</span>
                 <div className="navbar-dropdown">
                   <Link to="/recipes" className="navbar-item">
                     Manage recipes
@@ -76,9 +74,12 @@ const Header: React.FC<HeaderProps> = ({}) => {
             <div className="navbar-item">
               <div className="buttons">
                 {userId ? (
-                  <a className="button is-primary is-light" onClick={logout}>
+                  <button
+                    className="button is-primary is-light"
+                    onClick={logout}
+                  >
                     <strong>Log out</strong>
-                  </a>
+                  </button>
                 ) : (
                   <>
                     <Link to="/signup" className="button is-primary is-light">

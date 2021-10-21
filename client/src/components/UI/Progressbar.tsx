@@ -1,8 +1,4 @@
-import React from "react";
-
-interface ProgressbarProps {}
-
-const Progressbar: React.FC<ProgressbarProps> = ({}) => {
+const Progressbar = () => {
   return (
     <div style={{ minHeight: "calc(100vh - 88px - 56px)" }}>
       <progress

@@ -1,11 +1,11 @@
-import React from "react";
 import { useAppSelector } from "../redux/hooks";
 import { State } from "../shared/types";
 import { Link } from "react-router-dom";
 import heroImg from "../assets/hero.png";
 
-const Home: React.FC = ({}) => {
+const Home = () => {
   const userId = useAppSelector((state: State) => state.auth.id);
+
   return (
     <section className="hero is-small">
       <div className="hero-body is-flex is-flex-direction-column  has-text-centered">
@@ -24,7 +24,6 @@ const Home: React.FC = ({}) => {
             <Link to="/documentation" className="button is-black">
               How it works?
             </Link>
-
             <Link
               to={`${userId ? "/recipes/add" : "/signup"}`}
               className="button is-primary"
@@ -43,5 +42,4 @@ const Home: React.FC = ({}) => {
     </section>
   );
 };
-
 export default Home;

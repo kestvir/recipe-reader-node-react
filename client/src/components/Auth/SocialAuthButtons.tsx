@@ -37,7 +37,8 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ isSignup }) => {
         </div>
       </div>
 
-      <div className="field">
+      {/* Disable due to Facebook policy requirements */}
+      {/* <div className="field">
         <div className="control">
           <button
             className="button is-medium is-fullwidth"
@@ -52,7 +53,7 @@ const SocialAuthButtons: React.FC<SocialAuthButtonsProps> = ({ isSignup }) => {
             </span>
           </button>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

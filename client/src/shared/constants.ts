@@ -20,9 +20,10 @@ let BASE_API_URL = "http://localhost:5000";
 
 const BASE_PROD_API_URL = "https://recipe-reader-server.herokuapp.com";
 
-if (process.env.REACT_APP_MY_ENV === "production") {
-  BASE_API_URL = BASE_PROD_API_URL;
-}
+// if (process.env.REACT_APP_MY_ENV === "production") {
+// }
+
+BASE_API_URL = BASE_PROD_API_URL;
 
 const socialAuthURL = "/auth";
 const recipesURL = "/recipes";

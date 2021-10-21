@@ -21,6 +21,7 @@ const FilterRecipesTabs: React.FC<FilterRecipesTabsProps> = ({
               key={index}
               onClick={() => changeActiveTab(tab)}
             >
+              {/* a tag is needed for Bulma to properly style the tab */}
               <a>
                 <span>{tab}</span>
               </a>

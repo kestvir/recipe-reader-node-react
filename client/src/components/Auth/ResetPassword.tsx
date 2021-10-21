@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
 import { useHistory, useParams } from "react-router-dom";
@@ -10,14 +10,13 @@ import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
 import ProgressBar from "../UI/Progressbar";
 import SuccessMessage from "../UI/SuccessMessage";
 
-interface ResetPasswordProps {}
-
 interface Params {
   token: string;
 }
+
 const initialFormState = { password: "", confirmPassword: "" };
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
+const ResetPassword = () => {
   const userId = useSelector((state: State) => state.auth.id);
   const { isLoading, isSuccess, errors } = useSelector(
     (state: State) => state.auth
@@ -31,26 +30,28 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [form, setForm] = useState(initialFormState);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(resetPasswordTokenURL(params.token));
-        if (res.data === "success") {
-          setInitialLoading(false);
-          setIsTokenValid(true);
-        }
-      } catch (err) {
-        if (err.response.status === 401) {
-          setInitialLoading(false);
-          setIsTokenValid(false);
-          setTimeout(() => {
-            history.push("/");
-          }, 1700);
-        }
-        console.error(err);
+  const validateToken = useCallback(async () => {
+    try {
+      const res = await axios.get(resetPasswordTokenURL(params.token));
+      if (res.data === "success") {
+        setInitialLoading(false);
+        setIsTokenValid(true);
       }
-    })();
-  }, []);
+    } catch (err: any) {
+      if (err.response.status === 401) {
+        setInitialLoading(false);
+        setIsTokenValid(false);
+        setTimeout(() => {
+          history.push("/");
+        }, 1700);
+      }
+      console.error(err);
+    }
+  }, [params.token, history]);
+
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,19 +59,20 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
         history.push("/login");
       }, 1700);
     }
+
     if (errors.status === 401) {
       setIsTokenValid(false);
       setTimeout(() => {
         history.push("/");
       }, 1700);
     }
-  }, [isSuccess, errors]);
+  }, [isSuccess, errors, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -83,8 +85,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({}) => {
   };
 
   let passwordErrorMessage, confirmPasswordErrorMessage;
-
   const authErrorMessages = errors.message as MultipleAuthInputFieldFormErrors;
+
   if (errors.status === 422) {
     passwordErrorMessage = authErrorMessages.passwordErrorMessage;
     confirmPasswordErrorMessage = authErrorMessages.confirmPasswordErrorMessage;

@@ -4,12 +4,12 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface SearchRecipesInputProps {
   searchVal: string;
-  setSearchVal: React.Dispatch<React.SetStateAction<string>>;
+  filterRecipesBySearch: (searchVal: string) => void;
 }
 
 const SearchRecipesInput: React.FC<SearchRecipesInputProps> = ({
   searchVal,
-  setSearchVal,
+  filterRecipesBySearch,
 }) => {
   return (
     <div className="column is-half is-offset-one-quarter">
@@ -17,7 +17,7 @@ const SearchRecipesInput: React.FC<SearchRecipesInputProps> = ({
         <div className="control has-icons-right">
           <input
             value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
+            onChange={(e) => filterRecipesBySearch(e.target.value)}
             className="input is-medium"
             type="text"
             placeholder="Search for recipes..."

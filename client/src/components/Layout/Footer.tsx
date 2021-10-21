@@ -1,8 +1,4 @@
-import React from "react";
-
-interface FooterProps {}
-
-const Footer: React.FC<FooterProps> = ({}) => {
+const Footer = () => {
   return (
     <footer className="footer">
       <div className="content has-text-centered">

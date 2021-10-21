@@ -15,6 +15,7 @@ export const convertBase64 = (file: File) => {
   return new Promise<string | ArrayBuffer | null | Blob | File>(
     (resolve, reject) => {
       const fileReader = new FileReader();
+
       fileReader.readAsDataURL(file);
       fileReader.onload = () => {
         resolve(fileReader.result);
@@ -26,12 +27,12 @@ export const convertBase64 = (file: File) => {
   );
 };
 
-const SelectImg: React.FC<SelectImgProps> = ({
+const SelectImg = ({
   selectedImg,
   setSelectedImg,
   errorMessage,
   displayErrors,
-}) => {
+}: SelectImgProps) => {
   const [hideErrorStyles, setHideErrorStyles] = useState(true);
 
   useEffect(() => {
@@ -40,7 +41,9 @@ const SelectImg: React.FC<SelectImgProps> = ({
 
   const handleFileRead = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setHideErrorStyles(true);
+
     const files = e.target.files;
+
     if (files) {
       const file = files[0];
       const base64 = await convertBase64(file);

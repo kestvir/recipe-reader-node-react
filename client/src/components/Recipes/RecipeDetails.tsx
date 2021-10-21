@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
 import { State } from "../../shared/types";
 import draftToHtml from "draftjs-to-html";
 import DeleteRecipeModal from "./DeleteRecipeModal";
 
-interface RecipeDetailsProps {}
-
 interface Params {
   id: string;
 }
 
-const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
+const RecipeDetails = () => {
   const { activeRecipe } = useAppSelector((state: State) => state.recipes);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +18,6 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
   const params: Params = useParams();
 
   const { title, img, category, ingredients, instructions } = activeRecipe;
-
   const imgSrc = img.file as string;
 
   const convertStrToHTML = (str: string) => {
@@ -48,7 +45,7 @@ const RecipeDetails: React.FC<RecipeDetailsProps> = ({}) => {
           <div className="is-align-self-center block">
             <img
               src={imgSrc}
-              alt="Recipe Image"
+              alt="dish"
               style={{ maxWidth: "100%", width: "700px" }}
             />
           </div>

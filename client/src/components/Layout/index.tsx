@@ -1,17 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { useHistory } from "react-router-dom";
+import { convertToRaw } from "draft-js";
+import alanBtn from "@alan-ai/alan-sdk-web";
+import { AlanButton } from "@alan-ai/alan-sdk-web/dist/AlanButton";
 import Footer from "./Footer";
 import Header from "./Header";
 import { State } from "../../shared/types";
-import alanBtn from "@alan-ai/alan-sdk-web";
-import { AlanButton } from "@alan-ai/alan-sdk-web/dist/AlanButton";
 import { convertRichTextDataFromStrToEditorState } from "../../utils/richTextUtils";
-import { convertToRaw } from "draft-js";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
+
 interface CommandData {
   command: string;
   recipeId: string;
@@ -35,22 +36,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const history = useHistory();
 
-  const getConvertedRecipesToReadableText = () => {
+  const getConvertedRecipesToReadableText = useCallback(() => {
     let convertedRecipes: Array<RecipeForAlan> = [];
 
     recipes.forEach((recipe) => {
       const { title, category, ingredients, instructions, _id } = recipe;
 
-      const editorStateIngredients = convertRichTextDataFromStrToEditorState(
-        ingredients
-      );
-      const editorStateInstructions = convertRichTextDataFromStrToEditorState(
-        instructions
-      );
+      const editorStateIngredients =
+        convertRichTextDataFromStrToEditorState(ingredients);
+
+      const editorStateInstructions =
+        convertRichTextDataFromStrToEditorState(instructions);
 
       const rawIngredients = convertToRaw(
         editorStateIngredients.getCurrentContent()
       );
+
       const rawInstructions = convertToRaw(
         editorStateInstructions.getCurrentContent()
       );
@@ -64,16 +65,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       });
 
       const recipeObj: RecipeForAlan = {
+        _id,
         title,
         category,
         ingredients: ingredientssArr,
         instructions: instructionsArr,
-        _id,
       };
       convertedRecipes.push(recipeObj);
     });
+
     return convertedRecipes;
-  };
+  }, [recipes]);
 
   useEffect(() => {
     if (userId && !alanBtnInstance.current) {
@@ -104,10 +106,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
 
     const alanRoot = document.getElementsByClassName("alanBtn-root")[0];
+
     if (alanRoot && !userId) {
       alanRoot.remove();
     }
-  }, [userId]);
+  }, [userId, history]);
 
   useEffect(() => {
     if (recipes.length && alanBtnInstance.current) {
@@ -115,7 +118,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         recipes: getConvertedRecipesToReadableText(),
       });
     }
-  }, [recipes, alanBtnInstance.current]);
+  }, [recipes, getConvertedRecipesToReadableText]);
 
   return (
     <>

@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { setActiveRecipe } from "../../redux/slices/recipesSlice";
 import { Link } from "react-router-dom";
@@ -8,17 +7,18 @@ interface RecipeCardProps {
   recipe: RecipeApiData;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
+const RecipeCard = ({ recipe }: RecipeCardProps) => {
   const dispatch = useAppDispatch();
+
   const { title, img, category, _id } = recipe;
-  console.log(recipe);
   const id = _id as string;
   const imgSrc = img.file as string;
+
   return (
     <div className="card">
       <div className="card-image">
         <figure className="image is-4by3">
-          <img src={imgSrc} alt="Recipe image" style={{ objectFit: "cover" }} />
+          <img src={imgSrc} alt="dish" style={{ objectFit: "cover" }} />
         </figure>
       </div>
       <div className="card-content has-text-centered">

@@ -7,11 +7,9 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { signup, resetReqState } from "../../redux/slices/authSlice";
 import { State, MultipleAuthInputFieldFormErrors } from "../../shared/types";
 
-interface SignupProps {}
-
 const initialFormState = { email: "", password: "", confirmPassword: "" };
 
-const Signup: React.FC<SignupProps> = ({}) => {
+const Signup: React.FC = () => {
   const userId = useAppSelector((state: State) => state.auth.id);
   const { isLoading, isSuccess, errors } = useAppSelector(
     (state: State) => state.auth
@@ -26,20 +24,23 @@ const Signup: React.FC<SignupProps> = ({}) => {
     if (isSuccess) {
       history.push("/");
     }
-  }, [isSuccess]);
+  }, [isSuccess, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const { email, password, confirmPassword } = form;
+
     dispatch(signup({ email, password, confirmPassword }));
   };
 

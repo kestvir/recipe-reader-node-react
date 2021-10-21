@@ -7,9 +7,7 @@ import { State } from "../../shared/types";
 import { forgotPassword, resetReqState } from "../../redux/slices/authSlice";
 import SuccessMessage from "../UI/SuccessMessage";
 
-interface ForgotPasswordProps {}
-
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
+const ForgotPassword = () => {
   const userId = useAppSelector((state: State) => state.auth.id);
   const { isLoading, isSuccess, errors } = useAppSelector(
     (state: State) => state.auth
@@ -27,13 +25,13 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
         history.push("/");
       }, 1500);
     }
-  }, [isSuccess]);
+  }, [isSuccess, history]);
 
   useEffect(() => {
     return () => {
       dispatch(resetReqState());
     };
-  }, []);
+  }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -49,6 +47,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
   }
 
   let sendEmailError;
+
   if (errors.status === 401 && typeof errors.message === "string") {
     sendEmailError = errors.message;
   }

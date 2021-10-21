@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import Home from "../components/Home";
@@ -14,9 +13,7 @@ import RecipeDetails from "../components/Recipes/RecipeDetails";
 import NotFound from "../components/NotFound";
 import Documentation from "../components/Documentation";
 
-interface routesProps {}
-
-const BaseRouter: React.FC<routesProps> = ({}) => {
+const BaseRouter = () => {
   const userId = useSelector((state: State) => state.auth.id);
 
   return (
@@ -26,7 +23,7 @@ const BaseRouter: React.FC<routesProps> = ({}) => {
       <Route path="/login" component={Login} />
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/resetpassword/:token" component={ResetPassword} />
-      <Route path="/documentation" component={Documentation}/>
+      <Route path="/documentation" component={Documentation} />
       <ProtectedRoute
         path="/recipes/add"
         component={AddOrUpdateRecipe}

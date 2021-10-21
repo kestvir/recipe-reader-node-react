@@ -14,7 +14,6 @@
 
 .editor-wrapper {
     width: 100% !important;
-    height: 360px !important;
     display: block;
     box-sizing: inherit !important;
 }
@@ -22,6 +21,10 @@
 .editor-toolbar {
     border: 1px solid !important;
     border-color: #dbdbdb !important;
+}
+
+.rdw-editor-main {
+    height: auto;
 }
 
 .RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {

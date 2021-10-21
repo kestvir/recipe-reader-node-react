@@ -1,9 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
-interface NotFoundProps {}
-
-const NotFound: React.FC<NotFoundProps> = ({}) => {
+const NotFound = () => {
   return (
     <section className="section is-flex is-flex-direction-column is-justify-content-center is-align-content-center">
       <h3 className="is-size-3 mb-2">Page not found.</h3>
