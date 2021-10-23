@@ -103,7 +103,7 @@ const Recipes = () => {
         )}
 
         <div className="columns is-multiline is-justify-content-center mt-3">
-          {!filteredRecipes.length && (
+          {Boolean(recipes.length && !filteredRecipes.length) && (
             <p className="title">No recipes found.</p>
           )}
           {filteredRecipes.map((recipe, index) => {
