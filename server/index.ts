@@ -40,9 +40,16 @@ app.use(
     },
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.set(
+    "Cache-Control",
+    "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0"
+  );
+  next();
+});
 app.use("/", localAuth);
 app.use("/auth", socialAuth);
 app.get("/getuser", (req, res) => {
