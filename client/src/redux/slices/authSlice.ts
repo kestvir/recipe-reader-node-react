@@ -66,7 +66,7 @@ export const resetPassword = createAsyncThunk<
       password,
       confirmPassword,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     const { status, statusText, data } = err.response;
     if (status === 422) {
@@ -93,7 +93,7 @@ export const forgotPassword = createAsyncThunk<
 >("auth/forgotPassword", async (email, { rejectWithValue }) => {
   try {
     await axios.post(forgotPasswordURL, { email });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     const { status, statusText, data } = err.response;
     if (status === 401) {
@@ -117,7 +117,7 @@ export const signup = createAsyncThunk<
     if (response.status === 200) {
       dispatch(getUser());
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     const { status, statusText } = err.response;
     if (status === 422) {
@@ -138,7 +138,7 @@ export const login = createAsyncThunk<
     if (response.status === 200) {
       dispatch(getUser());
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     const { status, statusText } = err.response;
     if (status === 401) {
@@ -162,7 +162,7 @@ export const logout = createAsyncThunk<
     if (res.status === 200) {
       dispatch(clearUser());
     }
-  } catch (err) {
+  } catch (err: any) {
     const { status, statusText } = err.response;
     return rejectWithValue({ status, message: statusText });
   }
@@ -180,10 +180,12 @@ export const getUser = createAsyncThunk<
     } else {
       dispatch(clearUser());
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    const { status, statusText } = err.response;
-    return rejectWithValue({ status, message: statusText });
+
+    const { status } = err.response;
+
+    return rejectWithValue({ status, message: "" });
   }
 });
 
@@ -219,7 +221,7 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addMatcher(
-        isThunk(signup, login, forgotPassword, resetPassword),
+        isThunk(getUser, signup, login, forgotPassword, resetPassword),
         thunkHandler
       ),
 });
