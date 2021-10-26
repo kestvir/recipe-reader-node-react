@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../../redux/hooks";
-import { setActiveRecipe } from "../../redux/slices/recipesSlice";
+import { activeRecipeSet } from "../../redux/slices/recipesSlice";
 import { Link } from "react-router-dom";
 import { RecipeApiData } from "../../shared/types";
 
@@ -32,7 +32,7 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
           <p>
             <Link
               onClick={() =>
-                dispatch(setActiveRecipe({ recipeToUpdate: recipe }))
+                dispatch(activeRecipeSet({ recipeToUpdate: recipe }))
               }
               to={`/recipe/${id}`}
             >

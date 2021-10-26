@@ -48,7 +48,7 @@ export const getRecipes = createAsyncThunk<
 >("recipes/getRecipes", async (_, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.get(getAllRecipesURL);
-    dispatch(setRecipes({ recipes: res.data }));
+    dispatch(recipesSet({ recipes: res.data }));
     dispatch(setInitialAllRecipesLoadFalse());
   } catch (err: any) {
     console.log(err.response);
@@ -64,7 +64,7 @@ export const addRecipe = createAsyncThunk<
 >("recipes/addRecipe", async (recipeData, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.post(addRecipeURL, { ...recipeData });
-    dispatch(attachRecipe({ recipe: res.data }));
+    dispatch(recipeAdded({ recipe: res.data }));
   } catch (err: any) {
     console.log(err.response);
     const { status, statusText, data } = err.response;
@@ -90,8 +90,8 @@ export const updateRecipe = createAsyncThunk<
       const res = await axios.put(updateRecipeURL(updateRecipeData.id), {
         ...updateRecipeData.recipe,
       });
-      dispatch(changeRecipe({ recipe: res.data }));
-      dispatch(resetActiveRecipe());
+      dispatch(recipeUpdated({ recipe: res.data }));
+      dispatch(activeRecipeReset());
     } catch (err: any) {
       console.log(err.response);
       const { status, statusText, data } = err.response;
@@ -114,7 +114,7 @@ export const deleteRecipe = createAsyncThunk<
 >("recipes/deleteRecipe", async (recipeId, { dispatch, rejectWithValue }) => {
   try {
     const res = await axios.delete(deleteRecipeURL(recipeId));
-    dispatch(removeRecipe({ id: res.data }));
+    dispatch(recipeDeleted({ id: res.data }));
   } catch (err: any) {
     console.log(err.response);
     const { status, statusText } = err.response;
@@ -126,24 +126,24 @@ const recipesSlice = createSlice({
   name: "recipes",
   initialState: { ...initialRecipesState },
   reducers: {
-    setRecipes: (
+    recipesSet: (
       state,
       { payload }: PayloadAction<{ recipes: RecipeApiData[] }>
     ) => {
       state.recipes = payload.recipes;
     },
-    attachRecipe: (
+    recipeAdded: (
       state,
       { payload }: PayloadAction<{ recipe: RecipeApiData }>
     ) => {
       state.recipes.push(payload.recipe);
     },
-    removeRecipe: (state, { payload }: PayloadAction<{ id: string }>) => {
+    recipeDeleted: (state, { payload }: PayloadAction<{ id: string }>) => {
       state.recipes = state.recipes.filter(
         (recipe) => recipe._id !== payload.id
       );
     },
-    changeRecipe: (
+    recipeUpdated: (
       state,
       { payload }: PayloadAction<{ recipe: RecipeApiData }>
     ) => {
@@ -152,14 +152,14 @@ const recipesSlice = createSlice({
       });
       state.recipes[changedRecipeIndex] = payload.recipe;
     },
-    setActiveRecipe: (
+    activeRecipeSet: (
       state,
       { payload }: PayloadAction<{ recipeToUpdate: RecipeApiData }>
     ) => {
       state.activeRecipe = payload.recipeToUpdate;
       saveActiveRecipeToLocalStorage(payload.recipeToUpdate);
     },
-    resetActiveRecipe: (state) => {
+    activeRecipeReset: (state) => {
       state.activeRecipe = initialRecipesState.activeRecipe;
       removeActiveRecipeFromLocalStorage();
     },
@@ -185,13 +185,13 @@ const recipesSlice = createSlice({
 });
 
 export const {
-  setRecipes,
-  attachRecipe,
-  changeRecipe,
-  removeRecipe,
+  recipesSet,
+  recipeAdded,
+  recipeUpdated,
+  recipeDeleted,
   resetReqState,
-  resetActiveRecipe,
-  setActiveRecipe,
+  activeRecipeReset,
+  activeRecipeSet,
   setInitialAllRecipesLoadFalse,
 } = recipesSlice.actions;
 
