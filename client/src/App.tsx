@@ -18,9 +18,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <Router>
-        <Layout>{isLoading ? <Progressbar /> : <BaseRouter />}</Layout>
-      </Router>
+      {isLoading ? (
+        <Progressbar />
+      ) : (
+        <Router>
+          <Layout>
+            <BaseRouter />
+          </Layout>
+        </Router>
+      )}
     </div>
   );
 };
